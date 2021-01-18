@@ -2,7 +2,7 @@
 
 Anotações das aulas. :pencil2::books:
 
-- [Linux: A introdução ao sistema operacional](#Linux-:-A-introdução-ao-sistema-operacional)
+- [Linux: A introdução ao sistema operacional](#Linux---A-introdução-ao-sistema-operacional)
 - [Shell script - Manipulando Arquivos](#Shell-script---Manipulando-Arquivos)
 
 
@@ -15,7 +15,7 @@ Anotações das aulas. :pencil2::books:
 
 ------
 
-## Linux : A introdução ao sistema operacional
+## Linux - A introdução ao sistema operacional
 
 <br>
 

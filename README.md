@@ -81,6 +81,205 @@ Aplicativos Padrão
 
 - **Conhecendo o terminal e primeiros comandos**
 
+Terminal, Shell ou konsole é uma linha de comando onde podemos executar programas específicos do Linux. CTRL + ALT +T no Ubuntu
+
+man sudo_root
+
+pwd *Diretório local*
+
+- **Atalhos**
+
+Ctrl+C Cancela o comando atual
+
+Ctrl+U Apaga a linha inteira
+
+- **Revisão do Conteúdo**
+
+cd~ *Muda para diretório pessoal*
+
+history *Histórico de comandos*
+
+ls -l *Opção lista longa com detalhes*
+
+<u>*Exercícios Práticos*</u>
+
+1) Abra o Terminal
+2) Crie uma Pasta de nome Ubuntu dentro da Pasta Documentos
+3) Mova esta Pasta para o diretório Pessoal
+4) Crie um arquivo vazio de nome teste.txt dentro da Pasta Ubuntu
+5) Renomeie este Arquivo como linux.txt
+6) Crie uma cópia deste arquivo na Pasta Downloads
+7) Exiba todos os comandos digitados no Terminal
+8) Execute a ajuda do comando ls
+9) Execute o manual do comando mv
+10) Pare a execução do manual
+11) Saia do Terminal utilizando sequência de teclas
+12) Exclua a pasta Ubuntu
+13) Exclua o arquivo linux.txt 
+14) Limpe o terminal
+15) Utilize o comando para sair do terminal
+
+- **Certifique seu conhecimento**
+
+  Qual o comando lista arquivos e diretórios no Linux? 	*ls*
+
+  O que é o terminal no Linux?	*O terminal, Shell ou Konsole, é uma ferramenta de linha de comando do Linux.*
+
+  Qual comando cria diretórios no Linux?	*mkdir*
+
+  Qual das alternativa abaixo move um diretório de nome Ubuntu para a pasta pessoal?	*mv Ubuntu ~*
+
+  Qual comando remove um arquivo do Linux?	*rm*
+
+  Qual comando abaixo repete o ultimo comando digitado no terminal?	*!!*
+
+  Qual comando utilizado para copiar um arquivo?	*cp*
+
+  Qual a sequência de teclas correta para acessar o terminal no Linux?	*CTRL + ALT + T*
+
+  Qual o comando usado para mover ou renomear arquivos ou diretórios?	*mv*
+
+  Qual combinação de teclas de atalho finaliza o terminal?	*CTRL + D*
+
+#### Comandos para manipulação de arquivos e textos e redirecionamento
+
+- **Lidando com arquivos .txt**
+
+nano teste.txt
+
+​		ctrl + g *Exibe as informações e comandos do nano*
+
+​		ctrl + j *Justifica o texto*
+
+​		alt + u *desfazer última ação*
+
+​		ctrl + o *salva o arquivo*
+
+​		ctrl + x *fechar arquivo*
+
+<u>cat</u> exibe conteúdo do arquivo e <u>tac</u> exibe o conteúdo inverso de um arquivo
+
+- **Propriedades do arquivo .txt e comandos de datas**
+
+head teste.txt *Exibe as primeiras 10 linhas*
+
+tail teste.txt *Exibe as 10 ultimas linhas*
+
+tail teste.txt > distros.txt *Cria um arquivo com a saída do comando tail, ou head*
+
+cal *Calendário do mês corrente*
+
+cal > calendario.txt *Cria um arquivo com a saída do comando cal*
+
+date *Exibe a data e hora que executou comando*
+
+date >> calendario.txt *Adiciona a saída do comando date no final do arquivo calendario.txt*
+
+cal 2020 *Exibe o calendario do ano 2020*
+
+tail distros.txt | grep Linux *O grep vai fazer uma busca dentro do arquivo distros.txt*
+
+- **Comando de paginação de textos e criação de pastas**
+
+cat teste.txt | more *Exibe o arquivo teste.txt com paginação --Mais--*
+
+cat teste.txt | less *Exibe o arquivo teste.txt com paginação :*
+
+ctrl + z *Sai do arquivo*
+
+& *e* && *Operadores de redirecionamento*
+
+cat maio.txt & cat julho.txt *Exibe os arquivos separados por comando no terminal com pausa*
+
+cat maio.txt && cat julho.txt *Exibe os arquivos consecutivos*
+
+file maio.txt *Exibe informações do arquivo ou diretório* 
+
+file linux_ubuntu
+
+whatis *Exibe o que faz determinado arquivo*
+
+- **Revisão do conteúdo**
+
+  (|) Envia a saída de um comando para entrada de outro comando permitindo a execução de dois comandos.
+
+  (>) Redireciona a saída de um comando para outro comando ou arquivo
+
+  (>>) Redireciona a saída e adiciona a mesma para um comando ou arquivo
+
+  (<) Direciona a entrada de um arquivo para a saída de um comando
+
+  (&) Este operador permite usar dois comando e separa suas saídas no terminal
+
+  (&&) Usado para que dois comandos só sejam executados se o primeiro for executado com sucesso
+
+rm -r * *Remover todos os arquivos de uma pasta*
+
+Apostilas e informações do Linux https://guiafoca.org
+
+- **Exercícios de Revisão**
+
+Exercícios de Revisão
+1) Crie uma pasta de nome Exercícios e Acesse a mesma
+2) Crie um arquivo vazio de nome lista_nomes.txt
+3) Abra este arquivo com o Editor Nano
+4) Digite 20 Nomes de Pessoas Conhecidas incluindo o seu, pulando de linha para cada nome inserido.
+5) Salve o arquivo
+6) Exiba os 10 primeiros Nomes da Lista
+7) Exiba os 10 ultimos Nomes da Lista
+8) Procure no texto o seu nome
+9) Crie um Arquivo chamado setembro.txt com a saida do comando cal.
+10) Adicione o conteúdo do arquivo setembro.txt ao arquivo lista_nomes.txt
+11) Exiba o arquivo lista_nomes.txt com paginação
+12) Exiba o caminho do arquivos setembro.txt
+13) Exiba o tipo do arquivo lista_nomes.txt
+14) Exiba a explicação do comando ls
+15) Renomeie o Arquivo lista_nomes.txt para arquivo.txt
+16) Limpe o Terminal
+17) Saia do Terminal
+
+- **Certifique seu Conhecimento**
+
+  Hugo deseja criar uma pasta com seu nome e logo em seguida, se houver sucesso na criação da pasta, abrir esta pasta no terminal. Qual sequência de comandos Hugo deve usar?	*mkdir Hugo && cd Hugo*
+
+  José quer exibir o calendário do mês de junho de 2019 na saída do terminal, qual sequência de comandos ele deve digitar?		*cal junho 2019*
+
+  Qual das opções abaixo utilizamos quando queremos redirecionar a saída de um comando para outro comando ou arquivo?		*Nenhuma das alternativas.*
+
+  Qual comando utilizamos para criar um arquivo vazio de nome teste.txt?	*touch teste.txt*
+
+  José quer saber a explicação do comando ls, qual sequência de comandos ele deve usar?	*whatis ls*
+
+  Qual comando para editarmos o arquivo teste.txt no editor nano?	*nano teste.txt*
+
+  João deseja procurar seu nome em um arquivo chamado lista_nomes.txt, qual sequência de comandos ele deve usar?	*grep Joao lista_nomes.txt*
+
+  Qual comando utilizado para exibir o conteúdo de um arquivo no terminal?	*cat*
+
+  Qual comando utilizado para exibir a data atual do sistema?	*date*
+
+  Qual comando utilizado para inverter a saída do conteúdo de um arquivo no terminal?	*tac*
+
+#### Diretórios do Linux e Comandos de Sistema
+
+- **Apresentação dos comandos de diretórios do Linux**
+
+
+
+- **Praticando no terminal os comandos de diretórios e sistema - Parte 1**
+
+
+
+- **Praticando no terminal os comandos de diretórios e sistema - Parte 2**
+
+
+
+- **Revisão do conteúdo**
+
+
+
+- **Certifique seu conhecimento**
+
 
 
 <br><br><br>

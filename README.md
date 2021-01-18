@@ -154,3 +154,82 @@ cat novo_arquivo.txt
 #### Comandos com Shell Script - Parte 2
 
 - **mv - Mover Arquivos**
+
+mv *Move arquivos e diretório e renomeia arquivos e diretórios.*
+
+-i *Confirme antes de substituir*
+
+-n *Sem substituição*
+
+-b *Substituindo pelo backup*
+
+-u *Substitua se o arquivo de destino for antigo ou não existir.*
+
+- **cp - Copiar Arquivos**
+
+cp *Permite copiar arquivos ou diretórios para outro local.*
+
+-i *Confirmação de existência*
+
+-v *Exibe saída*
+
+-l *criar hard links em vez de copiar os arquivos*
+
+-s *criar links simbólicos em vez de copiar arquivos*
+
+-u *copiar apenas quando o arquivo de origem for mais novo do que o arquivo de destino ou quando o arquivo de destino não existir.*
+
+- **mkdir - Criando diretórios**
+
+- **find - Produrar por arquivos e rm - Removendo arquivos**
+
+rm *Remover arquivos*
+
+-f *Não confirma*
+
+find Procurar arquivos
+
+find ./ -type f -name "o" Procura arquivos no diretório atual com o nome de "o"
+
+find ./ -type f -name "A*" Procura arquivos no diretório atual iniciando com "A"
+
+man find *Exibe informações do comando*
+
+- **diff - Comparar diferença entre arquivos**
+
+diff *Faz comparações entre arquivos*
+
+- **rmdir - Remover diretório**
+
+rmdir *Remover diretório vazio*
+
+rm -rf *Para diretório não vazio*
+
+- **env - Trabalhando com variáveis**
+
+env *Variáveis de ambiente*
+
+PS1 *Prompt da linha de comandos*
+
+HOME *Diretório "/home" de um usuário*
+
+PATH *Lista de diretórios vasculhados quando um comando é executado*
+
+*Exemplo*
+
+​		limao=limao
+
+​		echo $limao
+
+​		export limao
+
+​		env
+
+- **Considerações finais**
+
+https://github.com/davinyvidal/dio-shell-script
+
+- **Certifique seu conhecimento**
+
+
+

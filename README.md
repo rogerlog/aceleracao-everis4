@@ -39,7 +39,7 @@ Ubuntu 20.04
   - Ambiente
   - LibreOffice/Navegadores
   - Software Updater
-- **Configuralção do Sistema Operacional - Parte 1**
+- **Configuração do Sistema Operacional - Parte 1**
 
 Em Settings... Notifications... Search...  Privacy
 
@@ -47,7 +47,7 @@ Diagnostics - Enviar relatório de erros.
 
 Atalhos do Ubuntu - Settings/Keyboard Shortcuts
 
-- **Configuralção do Sistema Operacional - Parte 1**
+- **Configuração do Sistema Operacional - Parte 2**
 
 Configurando para portugues em Settings
 

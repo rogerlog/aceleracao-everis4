@@ -2,10 +2,10 @@
 
 Anotações das aulas. :pencil2::books:
 
+- [Abertura - Como trabalhar em um ambiente ágil e global](#Abertura---Como-trabalhar-em-um-ambiene-ágil-e-global)
 - [Linux: A introdução ao sistema operacional](#Linux---A-introdução-ao-sistema-operacional)
 - [Shell script - Manipulando Arquivos](#Shell-script---Manipulando-Arquivos)
-
-
+- [Monitoramento de clusters Hadoop de alto nível com HDFS e Yarn](#Monitoramento-de-clusters-Hadoop-de-alto-nível-com-HDFS-e-Yarn)
 
 
 
@@ -15,7 +15,37 @@ Anotações das aulas. :pencil2::books:
 
 ------
 
+## Abertura - Como trabalhar em um ambiente ágil e global
+
+*Experts com grande experiência em projetos de missão crítica compartilham os princípios e competências essenciais para o dev desenvolver habilidades globais.*
+
+:calendar: 18/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+*Notas da live*
+
+#### Qualidades de um bom desenvolvedor (Soft Skills)
+
+https://imasters.com.br/desenvolvimento/as-5-qualidades-de-um-bom-desenvolvedor
+
+
+
+#### Metodologia Ágil
+
+https://neilpatel.com/br/blog/metodologia-agil/
+
+https://robsoncamargo.com.br/blog/o-que-e-metodologia-agil
+
+
+
+<br><br><br>
+
+------
+
 ## Linux - A introdução ao sistema operacional
+
+​	:hourglass: 10 horas
 
 <br>
 
@@ -850,6 +880,8 @@ Gerenciador yum
 
 ## Shell script - Manipulando Arquivos
 
+​	:hourglass: 2 horas
+
 <br>
 
 #### Introdução ao curso e alguns comandos com Shell Script
@@ -990,7 +1022,151 @@ PATH *Lista de diretórios vasculhados quando um comando é executado*
 
 https://github.com/davinyvidal/dio-shell-script
 
-- **Certifique seu conhecimento**
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Monitoramento de clusters Hadoop de alto nível com HDFS e Yarn
+
+*Aprenda mais sobre  a gerenciar dados armazenados em disco no cluster com o HDFS e como a gerenciar os recursos de um cluster utlizando o Yarn para alocar recursos computacionais da melhor maneira.*
+
+:calendar: 19/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+#### :pencil:*Anotações pré live* 
+
+- **Ecossistema Hadoop**
+
+Para Inserir os dados temos **Flume** (Não estruturado) e o **Sqoop** (Dados Relacionais)
+
+Sistema de arquivos distribuídos - **HDFS**
+
+Gerenciamento de recursos - **YARN**
+
+**Hadoop** (Batch) é uma aplicação para processar grandes volumes de dados em batch. Sistema distribuído. O Hadoop é uma linguagem de baixo nível, precisa de programação em Java.
+
+**Apache Spark** (Real Time) é uma aplicação de processamento de dados em tempo real, ou próximo do tempo real em memória.
+
+**Apache Pig** é uma aplicação de script. Pode criar aplicações .
+
+**Mahout**, é uma biblioteca de Machine Learning para o sistema Hadoop.
+
+**Hive** é uma solução Data Warehouse para Big Data. Dados estruturados, com linguagem semelhante ao SQL.
+
+**Apache Kafka** (Streaming), aplicações de streamings, processamento contínuo de dados.
+
+**Spark Streaming**, é uma parte do Spark que trata streaming.
+
+Algumas Soluções com objetivo de tratamento de dados: Drill, Zookeeper, Ambari, Hbase, Solr, Lucene, Storm.
+
+**Map Reduce**, tem por objetivo dividir tarefas de processamento de dados em vários nós (vários servidores virtualizados ou não ). *<u>Dividir para conquistar</u>*. Vários nós estarão trabalhando simultaneamente.
+
+Fundamento para Map Reduce e Hadoop: *Simplified Data Processing on Large Clusters*.
+
+Google: https://ai.google/research/pubs/pub62
+
+<u>Particularidades</u>
+
+- Escalável
+- Tolerante a falhas
+- Disponibilidade
+- Confiável
+- Utiliza conceito chave/valor
+- Não cria gargalos na rede, pos dados não trafegam (*processamento no nó*)
+
+<u>Importante</u>
+
+- Processamento em Batch
+- Grande volumes de dados
+- Processamento distribuído
+- Linguagem Imperativa (**JAVA**) - Necessidade de um programa para rodar uma aplicação hadoop*
+
+<u>Observações</u>
+
+- Uma vez no HDFS pode ser acessado por diversos sistemas (Hadoop, Hive, Spark, etc.)
+- Mapeamento é executado em paralelo nos nós
+- Apenas quando Mapeamento é encerrado, a redução inicia, tambem em paralelo
+- Fase intermediária: Suffle
+- Existem tarefas que requerem apenas a etapa de Mapeamento.
+
+<u>Hadoop</u>
+
+- Processamento em Batch
+- Baseado no conceito de MapReduce
+- Desenvolvido em Java
+- Open source
+- Distribuído: *Opera em clusters*
+- Hardware comodity: *Em qualquer tipo de hardware*
+- Capaz de distribuir o processamento em dezenas ou milhares de nós em um cluster
+- Suporte a dados estruturados ou não estruturados
+- Terabytes até Petabytes de dados
+- Conceito Master/Slave
+  - Master: mantém metadados, logs, adiciona, encontra, exclui e copia arquivos, distribui as tarefas de mapeamento e redução entre os nós, agendamento, balanceamento, etc.
+    - NameNode: gestão do HDFS em um nó. pode ser replicado (Hadoop 2)
+      - Datanodes: modo ativo e stanby
+      - Heartbeat: enviado do DataNode ao NameNode, como sinal de *saúde*
+    - JobTracker: distribui as tarefas de mapeamento e redução entre os nós.
+    - TaskTracker: recebe as tarefas de mapeamento e redução do JobTracker: agendamentos, balanceamento de carga, gestão de falhas, etc.
+  - Slave: Mantém dados, replica blocos.
+
+<u>Yarn</u>
+
+- Alocação de Recursos de forma global e unificada no cluster
+- Agendamentos
+- Priorização
+- Tolerância a Falhas
+- Componentes
+  - ResourceManager: um por cluster
+    - AplicationManager; gerencia atividades, otimização, distribuição de recursos, etc.
+    - Scheduler
+  - NodeManager: um por nó
+    - Responsável pela execução dos Jobs
+  - Aplication Master
+    - Distribui tarefas aos containers
+  - Container: mantem as tarefas
+
+<br>
+
+*Links Úteis*
+
+- https://datascientist.com.br
+
+- http://pig.apache.org/
+- https://hadoop.apache.org/
+- https://www.youtube.com/watch?v=iANBytZ26MI
+- https://www.youtube.com/watch?v=1vbXmCrkT3Y&ab_channel=edureka%21
+
+- https://www.ipsense.com.br/blog/tudo-o-que-voce-precisa-saber-sobre-o-ecossistema-hadoop/
+
+- https://cloud.google.com/solutions/migration/hadoop/hadoop-migration-security-guide?hl=pt-br
+
+- https://www.sas.com/pt_br/insights/big-data/hadoop.html
+
+- https://www.youtube.com/watch?v=1SNoNTaWFIo&ab_channel=CursodeBigData-RicardoPaiva
+
+- https://www.youtube.com/watch?v=CjRkEywm1go&ab_channel=CursodeBigData-RicardoPaiva
+
+- https://www.youtube.com/watch?v=GQAT4OiZE2U
+
+<br>
+
+#### Live com Rodrigo Garcia (*Everis*) :signal_strength:
 
 
 
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## 

@@ -1157,6 +1157,134 @@ Google: https://ai.google/research/pubs/pub62
 
 #### Live com Rodrigo Garcia (*Everis*) :signal_strength:
 
+*Anotações*
+
+**Parte 1: Big Data**
+
+> <u>Big Data</u> é um processo de análise e interpretação de um grande volume de dados armazenados remotamente. O Big Data pode integrar qualquer dado coletado sobre um assunto ou uma empresa, como os registros de compra e venda e mesmo os canais de interação não digital (telemarketing e call center). Onde há um registro feito, a tecnologia alcança.
+
+<br>
+
+*Escalabilidade Horizontal*
+
+Processamento **tradicional**: escalabilidade vertical
+
+Processamento **distribuído**: escalabilidade horizontal
+
+**O que é um cluster?** É um grupo de computadores que trabalham juntos. Provê armazenamento, processamento e gerenciamento de recursos.
+
+**O que é um nó?** Computador individual no cluster. O nó master (driver) gerencia a distribuição de trabalho para os nós workers.
+
+**O que é um daemon?** É um programa (serviço) rodando em um nó. Cada um tem sua função no cluster.
+
+<br>
+
+**Parte 2: HDFS**
+
+**O que é o Hadoop?**
+
+- Projeto de software open source escrito em Java;
+- Escalável, confiável, processamento distribuído;
+- S.O de Big Data;
+- Pode utilizar hardware comum (commodity cluster computing);
+- Framework para computadção distribuída, com filesystem distribuído (HDFS);
+- Infraestrutura confiável capaz de lidar com falhas (hardware, software, rede).
+
+**Distros**
+
+- <u>Open Source</u>
+  - Apache Hadoop
+- <u>Commercial Open Source</u>
+  - Cloudera (+Hortonworks)
+  - MapR
+  - AWS ElasticMapReduce
+  - Microsoft HDInsight
+
+***Core Hadoop***
+
+- Processing
+  - Spark
+  - MapReduce
+- Storage
+  - HDFS
+- Resource Management
+  - YARN
+
+<br>
+
+**HDFS** - *Hadoop Distributed File System*
+
+*HDFS -> Native OS Filesystem -> Disk Storage*
+
+- Baseado no Google FS;
+- Escalável e tolerante a falhas;
+- Arquivos Texto, sequence file, Parquet, AVRO, ORC...
+- Tamanho mínimo de um bloco **(default: 128 MB)**;
+- Fator de replicação **(default: 3)**.
+
+*Componentes do HDFS*
+
+- NameNode: *Gerencia o namespace(responsável por metadados); Se o Namenode para o cluster, fica inacessível;*
+
+- DataNode: *Armazena os blocos de arquivos;*
+
+- Secondary NameNode: *Oferece tarefas de ponto de verificação e manutenção do Namenode. Não é um bkp*
+
+*Como funciona?*
+
+Daddos separados em blocos; Replicado em 3; O Namenode armazena os metadados.
+
+*Exemplo*
+
+![](/.img/exemplo1hdfs.png)
+
+![](/.img/exemplo2hdfs.png)
+
+<br>
+
+*PUT /GET*
+
+- Copiar arquivo HDFS para local
+
+  $ hdfs dfs -get /tmp/file_teste.txt
+
+- Ingestão manual
+
+  $ hdfs dfs -put file_teste.txt /user/everis-bigdata/
+
+*Live Demo*
+
+$ sudo -u hdfs hdfs dfs -chmod -R 777 /tmp
+$ hdfs dfs -ls -h /
+$ hdfs dfs -cat /tmp/file_teste.txt |head -10
+$ hdfs dfs -rm /tmp/file_teste.txt
+$ hdfs dfs -mkdir /tmp/delete
+$ hdfs dfs –cp /tmp/file_teste.txt /tmp/delete/
+$ hdfs dfs –touchz /tmp/delete/empty_file
+$ hdfs dfs -rm -R /tmp/delete
+$ hdfs dfs -du -h /user
+$ hdfs fsck /tmp/ -files -blocks
+
+<br>
+
+*Start da Máquina Virtual*
+
+​	usuario: everis
+
+​	password: everis2021
+
+ifconfig; endereço começando com 192.168.
+
+*Caso não instalado: sudo yum install net-tools -y*
+
+Utilizando o MobaXterm
+
+
+
+
+
+
+
 
 
 

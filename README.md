@@ -1037,6 +1037,8 @@ https://github.com/davinyvidal/dio-shell-script
 
 :calendar: 19/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
 
+[Slides](/.pdf/Aula-19-01-2021.pdf)
+
 <br>
 
 #### :pencil:*Anotações pré live* 
@@ -1501,6 +1503,6 @@ Perguntas
 
 <br>
 
-[Slides](.pdf/Aula-20-01-2021.pdf)
+[Slides](/.pdf/Aula-20-01-2021.pdf)
 
 *Notas da live*

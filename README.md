@@ -6,6 +6,7 @@ Anotações das aulas. :pencil2::books:
 - [Linux: A introdução ao sistema operacional](#Linux---A-introdução-ao-sistema-operacional)
 - [Shell script - Manipulando Arquivos](#Shell-script---Manipulando-Arquivos)
 - [Monitoramento de clusters Hadoop de alto nível com HDFS e Yarn](#Monitoramento-de-clusters-Hadoop-de-alto-nível-com-HDFS-e-Yarn)
+- [Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop](#Orquestrando-ambientes-de-big-data-distribuídos-com-Zookeeper,-Yarn-e-Sqoop)
 
 
 
@@ -1277,17 +1278,212 @@ ifconfig; endereço começando com 192.168.
 
 *Caso não instalado: sudo yum install net-tools -y*
 
-Utilizando o MobaXterm
+Utilizando o MobaXterm. Este Ip *(192.168.15.27)* foi encontrado utilizando o ifconfig
+
+```bash
+ssh 192.168.15.27 -l everis
+```
+
+Start NameNode
+
+```bash
+$ sudo service hadoop-hdfs-namenode start
+```
+
+```bash
+$ sudo service hadoop-hdfs-secondarynamenode start
+```
+
+Verificar script_apoio
+
+tmp
+
+```bash
+ll script_apoio/
+```
+
+```bash
+sh script_apoio/start_all_service.sh
+```
+
+```bash
+$ sudo service hadoop-hdfs-namenode start
+$ sudo service hadoop-hdfs-secondarynamenode start
+$ sudo service hadoop-hdfs-datanode start
+$ sudo service hadoop-mapreduce-historyserver start
+$ sudo service hadoop-yarn-resourcemanager start
+$ sudo service hadoop-yarn-nodemanager start
+```
+
+```bash
+$ hdfs dfs -get /tmp/file_teste.txt
+```
+
+```bash
+$ hdfs dfs -put file_teste.txt /user/everis-bigdata/
+```
+
+Colocar a permissão antes
+
+```bash
+$ sudo -u hdfs hdfs dfs -chmod -R 777 /tmp
+$ hdfs dfs -ls -h /
+$ hdfs dfs -cat /tmp/file_teste.txt |head -10
+$ hdfs dfs -rm /tmp/file_teste.txt
+$ hdfs dfs -mkdir /tmp/delete
+$ hdfs dfs –cp /tmp/file_teste.txt /tmp/delete/
+$ hdfs dfs –touchz /tmp/delete/empty_file
+$ hdfs dfs -rm -R /tmp/delete
+$ hdfs dfs -du -h /user
+$ hdfs fsck /tmp/ -files -blocks
+```
+
+Informações do arquivo
+
+```bash
+ll -h
+```
+
+*São dois sistemas de arquivos diferentes. hdfs e local*
+
+No hdfs demora mais um pouco para ler por fazer todo o caminho, descrito no exemplo anterior.
+
+Conectando o namenode
+
+```bash
+sudo -u hdfs hdfs fsck /tmp/ -files -blocks
+```
+
+Ele mostra os blocos. No exemplo, apnas 1 bloco pois é menor que 128MB. E só tem uma réplica. Under replicated.
+
+/tmp/file_teste.text 4784 bytes
+
+Mostra as informações do hdfs fsck
+
+```bash
+hdfs fsck
+```
+
+<br>
+
+**Parte 3: YARN**
+
+*Yet Another Resource Negotiator*
+
+- Gerenciamento de recursos;
+- Gerenciamento e monitoramento de Jobs;
+- Recursos dos nós são alocados somente quando requisitado (via container).
+
+*Componentes*
+
+- **Application**: um job submetido ao Hadoop;
+- **Application Master**: gerencia a execução e o escalonamento das tarefas (1 por aplicação);
+- **Container**: unidade de alocação de recursos (ex. c1 = 1 GB RAM, 2 CPU);
+- **Resource Manager**: gerenciador global de recursos;
+- **Node Manager**: gerencia o ciclo de vida e monitora os recursos do Container.
+
+*Execução de aplicação*
+
+![](/.img/exemplo1Yarn.png)
 
 
 
+Log
+
+```bash
+sudo sed -i 's|hdfs://|hdfs://bigdata-srv:8020/|g'
+/etc/hadoop/conf/yarn-site.xml
+```
+
+Jobs: O Hadoop Vai rodar alguns exemplos de MapReduce
+
+```bash
+sudo –u hdfs yarn jar /usr/lib/hadoop-mapreduce/hadoopmapreduce-examples.jar wordcount /tmp/file_teste.txt
+/tmp/wc_output
+```
+
+*Pesquisar sobre exemplos na biblioteca exemplo de MapReduce.  https://stage.philipithomas.com/simple-mapreduce/*
+
+<u>**Observação**</u>: Com o comando acima irá resultar uma url http://**bigdata-srv**:8088/...
+
+Substituir **bigdata-srv** pelo ip da máquina. Neste exemplo, 192.168.15.27.
+
+<u>192.168.15.27:8088/cluster</u> *Vai acessar o Hadoop com All Applications*
+
+<br>
+
+**<u>Restart</u>** 
+
+- Parar tudo
+
+  - Script de Apoio
+
+    ```bash
+    sh script_apoio/stop_all_service.sh
+    ```
+
+- Start
+
+  - Script de Apoio
+
+    ```bash
+    sh script_apoio/start_all_service.sh
+    ```
+
+    
+
+*Lendo o input e output da aplicação*
+
+```bash
+hdfs dfs -cat /tmp/file_teste.txt
+```
+
+```bash
+hdfs dfs -ls /tmp/wc_output
+```
+
+Ler arquivo Log 
+
+```bash
+$ sudo -u hdfs yarn logs -applicationId
+application_1611089476809_0001 |more
+```
+
+Converter para arquivo
+
+```bash
+sudo -u hdfs yarn logs -applicationId
+application_1611089476809_0001 > wordcount.log
+```
+
+<br>
+
+**<u>RESUMÃO</u>**
+
+- **HDFS** é a camada de armazenamento do Hadoop;
+  - Divide os dados em blocos e os distribui pelo cluster;
+  - Os workers rodam o daemon DataNode e o master o daemon NameNode;
+
+- **MAPREDUCE** foi o primeiro framework de computação distribuída utilizado com o HDFS;
+  - Levou o processamento aos servidores onde o dado está armazenado.
+- **YARN** gerencia os recursos no cluster
+  - Trabalha com o HDFS para executar as tarefas quando o dado é armazenado;
+  - OS workers rodam o daemon "NodeManager" e o master o daemon "ResourceManager";
+  - É possível monitorar os jobs através da porta 8088.
 
 
 
+<br>
 
+Perguntas
 
+- Problemas no ip. *Copiar ip desse arquivo*
 
+  ```bash
+  sudo vim /etc/hosts
+  ```
 
+  Comentar # o ip com o bigdata-srv. i ; esc :wq
 
 <br>
 
@@ -1297,4 +1493,14 @@ Utilizando o MobaXterm
 
 ------
 
-## 
+## Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop
+
+*Aprenda mais sobre Zookeeper para gerenciar sistemas distribuídos,Sqoop para transferir dados entre bancos de dados relacionais e o Hadoop e gerencie os recursos de um cluster com Yarn.*
+
+:calendar: 20/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](.pdf/Aula-20-01-2021.pdf)
+
+*Notas da live*

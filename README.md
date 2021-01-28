@@ -6,7 +6,7 @@ Anotações das aulas. :pencil2::books:
 - [Linux: A introdução ao sistema operacional](#Linux---A-introdução-ao-sistema-operacional)
 - [Shell script - Manipulando Arquivos](#Shell-script---Manipulando-Arquivos)
 - [Monitoramento de clusters Hadoop de alto nível com HDFS e Yarn](#Monitoramento-de-clusters-Hadoop-de-alto-nível-com-HDFS-e-Yarn)
-- [Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop](#Orquestrando-ambientes-de-big-data-distribuídos-com-Zookeeper,-Yarn-e-Sqoop)
+- [Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop](#Orquestrando-ambientes-de-big-data-distribuídos-com-Zookeeper-Yarn-e-Sqoop)
 
 
 

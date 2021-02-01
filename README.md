@@ -1506,3 +1506,30 @@ Perguntas
 [Slides](/.pdfs/Aula-20-01-2021.pdf)
 
 *Notas da live*
+
+(Link da MV atualizado)[https://hermes.digitalinnovation.one/files/acceleration/Everis_BigData-v3.ova]
+
+<br>
+
+**Parte 1: Zookeeper**
+
+> Zookeeper e Sqoop em um ambiente clusterizado Hadoop
+
+O que é o **Zookeeper**?
+
+- Serviço de coordenação distribuído;
+- Gerenciamento de um grande conjunto de hosts (nós);
+- Arquitetura simples e API;
+- Assim como o Hadoop, vem simplificar o processo do desenvolvedor;
+- Fornece as rotas necessárias para as peças do cluster.
+- Identifica os nós por nomes (DNS like);
+- Gerencia e coordena as configurações;
+- Funciona com esquema de eleição de líder (usar-se sempre pelo menos três Zookeeper);
+- Pode indisponibilizar o dado enquanto está sendo modificado;
+- Ajuda na recuperação automática de falhas (HBase, por exemplo).
+- 
+
+
+
+
+

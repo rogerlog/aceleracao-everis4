@@ -1527,9 +1527,172 @@ O que é o **Zookeeper**?
 - Funciona com esquema de eleição de líder (usar-se sempre pelo menos três Zookeeper);
 - Pode indisponibilizar o dado enquanto está sendo modificado;
 - Ajuda na recuperação automática de falhas (HBase, por exemplo).
-- 
 
 
 
+**Arquitetura Zookeeper**
 
+- **Leader:** responsável pelo processamento de requests de escrita. Eleito internamente. 
+- **Followers:** recebem as requests de leitura
 
+<br>
+
+**Parte 2: Conceito Sqoop**
+
+**Sqoop**
+
+- Originalmente desenvolvido pela Cloudera;
+- Movimenta dados entre **banco de dados relacional** e **HDFS**;
+- Pode-se **importar** todas as tabelas, apenas uma tabela ou parte de uma tabela para o HDFS;
+- Também permite **exportar** de dados do HDFS para um banco de dados;
+- Permite **automatização** do processo de ingestão.
+
+*Como funciona? (Ele é um pouco mais lento)*
+
+- Realiza a leitura linha por linha da tabela para escrever o arquivo no HDFS;
+- O resultado do import é um conjunto de arquivos contendo a cópia dos dados da tabela importada;
+- Under the hood, gera classes Java, permitindo que o usuário possa interagir com o dado importado;
+- Pode importar dados e metadados de bancos de dados SQL direto para o Hive;
+
+- Utiliza MapReduce*(Não é tão performático)* para realizar import/ export dos dados, provendo um processamento paralelo e tolerante a falha.
+- Permite especificar o intervalo e quais colunas serão importadas;
+- Possibilita a especificação de delimitadores e formatos de arquivos;
+
+- Realiza conexões com bancos de dados em **paralelo**, executando comandos de Select(import) e Insert/Update(export);
+- Aceita conexão com diversos plug-ins: MySQL, PostgreSQL, Oracle, Teradata, Netezza, Vertica, DB2 e
+SQL Server;
+- O formato padrão do arquivo importado no HDFS é CSV.
+
+*Exemplo*
+
+![](/.img/sqoop1.png)
+
+![](/.img/sqoop2.png)
+
+```shell
+sqoop import \
+--connect jdbc:mysql://mysql.example.com/sqoop \
+--username sqoop \
+--password sqoop \
+--table cities
+--warehouse-dir /etl/input/ # Pemite especificar um diretório no HDFS como destino
+--where "country = 'Brazil'" # Pa importar apenas um subconjunto de registros de uma tabela
+-P ou --password-file my-sqoop-password
+--as-sequencefile ou --as-avrodatafile # Para escrever o arquivo no HDFS em formato binário (Sequence ou Avro)
+--compress # Comprime os blocos antes de gravar no HDFS em formato gzip por padrão
+--compression-codec # Utilizar outros codecs de compressão, exemplo: org.apache.hadoop.io.compress.BZip2codec
+--direct # Realiza import direto por meio das funcionalidades nativas do BD para melhorar a performance, exemplo: mysqldump ou pg_dump
+--map-column-java c1=String # Especificar o tipo do campo
+--num-mappers 10 # Especificar a quantidade de paralelismo para controlar o workload
+--null-string '\\N'\
+--null-non-string '\\N'
+--incremental append ou lastmodified # Funcionalidade para incrementar os dados
+			--check-column id ou last_update_date # Identifica a coluna que será verificada para incrementar novos dados
+			--last-value 1 ou "2013-05-22 01:01:01" # Para especificar o último valor importado no Hadoop
+```
+
+<br>
+
+[Documentação do Sqoop](https://sqoop.apache.org/docs/1.4.6/index.html)
+
+<br>
+
+- Import da tabela accounts
+
+```shell
+sqoop import --table accounts \
+--connect jdbc:mysql://dbhost/loudacre \
+--username dbuser --password pw
+```
+
+- Import da tabela accounts utilizando um delimitador
+
+```shell
+sqoop import --table accounts \
+--connect jdbc:mysql://dbhost/loudacre \
+--username dbuser --password pw \
+--fields-terminated-by "\t"
+```
+
+- Import da tabela accounts limitando os resultados
+
+```shell
+sqoop import --table accounts \
+--connect jdbc:mysql://dbhost/loudacre \
+--username dbuser --password pw \
+--where "state='CA'"
+```
+
+- Import incremental baseado em um timestamp. Dve certificar-se de que esta coluna é atualizada quando os registros são atualizados ou adicionados.
+
+```shell
+sqoop import --table invoices \
+--connect jdbc:mysql://dbhost/loudacre \
+--username dbuser --password pw \
+--incremental lasmodified \
+--check-column mod_dt \
+--last-value '2015-09-30 16:00:00'
+```
+
+- Import baseado no último valor de uma coluna específica
+
+```shell
+sqoop import --table invoices \
+--connect jdbc:mysql://dbhost/loudacre \
+--username dbuser --password pw \
+--incremental append \
+--check-column id \
+--last-value 9878306
+```
+
+<br>
+**Parte 3: Realizar uma ingestão com Sqoop**
+
+- Instalando o Sqoop
+
+[Comandos](/aula20-01-2021/Comandos.txt)
+
+```shell
+sudo yum install --assumeyes sqoop # Instalando
+cd /tmp # Abre a pasta tmp
+wget http://www.java2s.com/Code/JarDownload/java-json/java-json.jar.zip # Pega o arquivo zipado
+unzip /tmp/java-json.jar.zip # Descompacta o arquivo
+sudo mv /tmp/java-json.jar /usr/lib/sqoop/lib/ # Move o json para a lib do sqoop
+sudo chown root: /usr/lib/sqoop/lib/java-json.jar # Altera o dono para o root
+sqoop-version
+```
+
+Saída do sqoop-version
+
+```bash
+21/01/20 17:00:47 INFO sqoop.Sqoop: Running
+Sqoop version: 1.4.6-cdh5.16.2
+Sqoop 1.4.6-cdh5.16.2
+git commit id
+Compiled by jenkins on Mon Jun 3 03:34:57 PDT 2019
+```
+
+Pegar [install_sqoop.sh](/aula20-01-2021/install_sqoop.sh) , para automatizar.
+
+```shell
+vim install_sqoop.sh
+```
+
+Clique **i** teclado. Pra colar **shift+insert**. **Esc:wq**
+
+```shell
+sh install_sqoop.sh
+[sudo] password for everis: everis2021
+```
+
+**OBS:** A VM precisa ter acesso a internet.
+
+<br>
+
+**HANDS-ON!**
+
+Arquivos necessários:
+
+- install_sqoop.sh
+- pokemon.sql
+- sqoop_import.sh

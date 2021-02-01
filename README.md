@@ -1507,7 +1507,7 @@ Perguntas
 
 *Notas da live*
 
-(Link da MV atualizado)[https://hermes.digitalinnovation.one/files/acceleration/Everis_BigData-v3.ova]
+[Link da MV atualizado](https://hermes.digitalinnovation.one/files/acceleration/Everis_BigData-v3.ova)
 
 <br>
 

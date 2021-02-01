@@ -1693,6 +1693,6 @@ sh install_sqoop.sh
 
 Arquivos necessários:
 
-- install_sqoop.sh
-- pokemon.sql
-- sqoop_import.sh
+- [install_sqoop.sh](/aula20-01-2021/install_sqoop.sh)
+- [pokemon.sql](/aula20-01-2021/pokemon.sql)
+- [sqoop_import.sh](/aula20-01-2021/sqoop_import.sh)

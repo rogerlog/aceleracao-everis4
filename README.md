@@ -7,6 +7,17 @@ Anotações das aulas. :pencil2::books:
 - [Shell script - Manipulando Arquivos](#Shell-script---Manipulando-Arquivos)
 - [Monitoramento de clusters Hadoop de alto nível com HDFS e Yarn](#Monitoramento-de-clusters-Hadoop-de-alto-nível-com-HDFS-e-Yarn)
 - [Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop](#Orquestrando-ambientes-de-big-data-distribuídos-com-Zookeeper-Yarn-e-Sqoop)
+- [Como realizar consultas de maneira simples no ambiente complexo de Big Data com HIVE e Impala](#Como-realizar-consultas-de-maneira-simples-no-ambiente-complexo-de-Big-Data-com-HIVE-e-Impala)
+- [Explorando o poder do NoSQL com Cassandra e Hbase](#Explorando-o-poder-do-NoSQL-com-Cassandra-e-Hbase)
+- [Intensivo de Python - O mínimo que você precisa saber](#Intensivo-de-Python-O-mínimo-que-você-precisa-saber)
+- [Trabalhando com serviços de mensageria real time com Python e Kafka na prática](#Trabalhando-com-serviços-de-mensageria-real-time-com-Python-e-Kafka-na-prática)
+- [Processando grandes conjuntos de dados de forma paralela e distribuída com Spark](#Processando-grandes-conjuntos-de-dados-de-forma-paralela-e-distribuída-com-Spark)
+- [Criando pipelines de dados eficientes - Parte 1](#Criando-pipelines-de-dados-eficientes-Parte-1)
+- [Criando pipelines de dados eficientes - Parte 2](#Criando-pipelines-de-dados-eficientes-Parte-2)
+- [Orquestrando Big Data em Ambiente de Nuvem](#Orquestrando-Big-Data-em-Ambiente-de-Nuvem)
+- [Scala: o poder de uma linguagem multiparadigma](#Scala:-o-poder-de-uma-linguagem-multiparadigma)
+- [O que você precisa saber para construir APIs verdadeiramente restfull](#O-que-você-precisa-saber-para-construir-APIs-verdadeiramente-restfull)
+- [Graduação - habilidades que diferenciam um sênior na everis](#Graduação-habilidades-que-diferenciam-um-sênior-na-everis)
 
 
 
@@ -1696,3 +1707,451 @@ Arquivos necessários:
 - [install_sqoop.sh](/aula20-01-2021/install_sqoop.sh)
 - [pokemon.sql](/aula20-01-2021/pokemon.sql)
 - [sqoop_import.sh](/aula20-01-2021/sqoop_import.sh)
+
+Colocar comando e colar os arquivos acima. Cada arquivo
+
+```shell
+vim install_sqoop.sh
+vim pokemon.sql
+sqoop_import.sh
+```
+
+Rodar o sql dentro do mysql
+
+```shell
+mysql -u root -h localhost -pEveris@2021 < pokemon.sql
+```
+
+Verificando a existência da tabela
+
+```shell
+mysql -u root -h localhost -pEveris@2021
+```
+
+Rodar as linhas do arquivo [dontpad](/aula20-01-2021/dontpad.txt)
+
+*Primeira linha somente pra não identificar a segunda linha como password*
+
+```shell
+sudo service hadoop-hdfs-namenode start
+```
+
+Restante das linhas
+
+```shell
+sudo service hadoop-hdfs-secondarynamenode start
+sudo service hadoop-hdfs-datanode start
+sudo service hadoop-yarn-nodemanager start
+sudo service hadoop-yarn-resourcemanager start
+sudo service hadoop-mapreduce-historyserver start
+sudo service zookeeper-server start
+```
+
+sh sqoop_import.sh
+
+O Conteudo está abaixo
+
+```shell
+echo "Apagando diretório de output"
+sudo -u hdfs hdfs dfs -rm -R /user/everis-bigdata/pokemon
+
+echo "Importando a tabela"
+sudo -u hdfs sqoop import \
+
+--connect jdbc:mysql://localhost/trainning \
+--username root --password "Everis@2021" \
+--fields-terminated-by "|" \
+--split-by Generation \
+--target-dir /user/everis-bigdata/pokemon \
+--query 'SELECT * FROM pokemon WHERE $CONDITIONS' \
+--where 'Number IS NOT NULL' \
+--compress \
+--num-mappers 4
+```
+
+-- Vai importar as tabelas, número de linhas, url yarn
+
+-- Precisa modificar a url com o ip da máquina
+
+```shell
+ip addr show
+```
+
+Exemplo da aula: 
+
+192.168.15.27:8088/proxy/application_1611167972762_0025/
+
+192.168.15.27:8088
+
+*O Sqoop gera um jar, e aplicação MapReduce*. Retrieved 800 records.
+
+Listando
+
+```shell
+hdfs dfs -ls /user/everis-bigdata/pokemon
+```
+
+Ler arquivos
+
+```shell
+hdfs dfs -text /user/everis-bigdata/pokemon/part-m-00000.gz
+```
+
+<br>
+
+**Exercícios**
+
+Import subsets com Sqoop seguindo as seguintes premissas:
+1. Todos os Pokémon lendários;
+2. Todos os Pokémon de apenas um tipo;
+3. Os top 10 Pokémon mais rápidos;
+4. Os top 50 Pokémon com menos HP;
+5. Os top 100 Pokémon com maiores atributos;
+
+<br>
+
+*Testando a query*
+
+```shell
+mysql -u root -h localhost -pEveris@2021
+```
+
+No Mysql. Exercício 1, todos os lendários
+
+```sql
+SELECT * FROM trainning.pokemon WHERE Legendary IS true
+```
+
+Retorno: 65 rows in set
+
+No **Sqoop** 
+
+```shell
+sudo -u hdfs sqoop import \
+```
+
+String de conexão
+
+```shell
+--connectjdbc:mysql://localhost/trainning \
+--username root --password "Everis@2021" \
+--direct \
+--table pokemon \
+--target-dir /user/everis-bigdata/pokemon/1 \
+--where "Legendary=1"
+```
+
+Retorno: 65 rows in set
+
+Verificando o diretório
+
+```shell
+hdfs dfs -ls /user/everis-bigdata/pokemon/1
+```
+
+Found 5 items
+
+Ler todos os arquivos
+
+```shell
+hdfs dfs -cat /user/everis-bigdata/pokemon/1/*
+```
+
+Contando as linhas
+
+```shell
+hdfs dfs -ls /user/everis-bigdata/pokemon/1/* |wc -l
+```
+
+Retorno 65
+
+<hr>
+
+Para o Exercício 2, vai utilizar da mesma forma
+
+```shell
+--connectjdbc:mysql://localhost/trainning \
+--username root --password "Everis@2021" \
+--direct \
+--table pokemon \
+--target-dir /user/everis-bigdata/pokemon/1 \
+--where "Legendary=1"
+```
+
+*Dicas*
+
+Verificar o yarn
+
+```shell
+sudo service hadoop-yarn-resourcemanager status
+```
+
+ifconfig
+
+Spoilers Aceleração dos desafios
+
+```shell
+SELECT * FROM trainning.pokemon WHERE Legendary IS true; (65)
+SELECT * FROM trainning.pokemon WHERE Type2 = ""; (386)
+SELECT * FROM trainning.pokemon ORDER BY Speed DESC LIMIT 10;
+SELECT * FROM trainning.pokemon ORDER BY HP LIMIT 50;
+SELECT Number, Name, SUM(HP+Attack+Defense+SpAtk+SpDef+Speed) AS Total FROM trainning.pokemon GROUP BY Number ORDER BY Total DESC LIMIT 100;
+
+sudo -u hdfs sqoop import \
+--connect jdbc:mysql://localhost/trainning \
+--username root --password "Everis@2021" \
+--direct \
+--table pokemon \
+--target-dir /user/everis-bigdata/pokemon/1 \
+--where "Legendary=1"
+
+sudo -u hdfs sqoop import \
+--connect jdbc:mysql://localhost/trainning \
+--username root --password "Everis@2021" \
+--direct \
+--table pokemon \
+--target-dir /user/everis-bigdata/pokemon/2 \
+--where "Type2=''"
+
+sudo -u hdfs sqoop import \
+--connect jdbc:mysql://localhost/trainning \
+--username root --password "Everis@2021" \
+--split-by 1 \
+--target-dir /user/everis-bigdata/pokemon/3 \
+--query 'SELECT * FROM pokemon WHERE $CONDITIONS ORDER BY Speed LIMIT 10'
+
+sudo -u hdfs sqoop import \
+--connect jdbc:mysql://localhost/trainning \
+--username root --password "Everis@2021" \
+--split-by 1 \
+--target-dir /user/everis-bigdata/pokemon/4 \
+--query 'SELECT * FROM pokemon WHERE $CONDITIONS ORDER BY HP LIMIT 50'
+
+sudo -u hdfs sqoop import \
+--connect jdbc:mysql://localhost/trainning \
+--username root --password "Everis@2021" \
+--split-by 1 \
+--target-dir /user/everis-bigdata/pokemon/5 \
+--query 'SELECT Number, Name, SUM(HP+Attack+Defense+SpAtk+SpDef+Speed) AS Total FROM pokemon WHERE $CONDITIONS GROUP BY Number ORDER BY Total DESC LIMIT 100'
+```
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Como realizar consultas de maneira simples no ambiente complexo de BigData com HIVE e Impala
+
+*Aprenda mais sobre Hive e Impala*
+
+:calendar: 21/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/Live-21-01-2021-Hive_Impala.pdf)
+
+*Notas da live*
+
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Explorando o poder do NoSQL com Cassandra e Hbase
+
+*Aprenda como trabalhar com NoSql trabalhando com o banco de dados Cassandra e Hbase.*
+
+:calendar: 22/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Intensivo de Python - O mínimo que você precisa saber
+
+*Aprenda a base de Python necessária para se dar bem em engenharia de dados , passando pelos conceitos essenciais para trabalhar com uma aplicação corporativa de alto nível.*
+
+:calendar: 25/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Trabalhando com serviços de mensageria real time com Python e Kafka na prática
+
+*Aprenda como integrar o Python com Apache Kafka, um dos sistemas de mensageria corporativos mais utilizados no mercado.*
+
+:calendar: 26/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Processando grandes conjuntos de dados de forma paralela e distribuída com Spark
+
+*Aprenda mais sobre Apache Spark, a ferramenta Big Data para o processamento de grandes conjuntos de dados mais utilizada em grandes projetos.*
+
+:calendar: 27/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Criando pipelines de dados eficientes - Parte 1
+
+*Eleve seus conhecimentos com PySpark e processe grandes quantidades e faça um streaming em tempo real.*
+
+:calendar: 28/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Criando pipelines de dados eficientes - Parte 2
+
+*Continue sua jornada para dominar PySpark vendo boas práticas de como ter mais domínio dos seus dados.*
+
+:calendar: 29/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+
+
+
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Orquestrando BigData em Ambiente de Nuvem
+
+*Aprenda como aproveitar o melhor do ambiente de nuvem para montar seu ambiente de big data de uma maneira profissional.*
+
+:calendar: 01/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Scala: o poder de uma linguagem multiparadigma
+
+*Aprenda como mais sobre uma linguagem Scala, explorando seus principais tópicos e as suas vantagens de utilização em ambiente de Big Data.*
+
+:calendar: 02/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+
+
+
+
+
+<br>
+
+<br>
+
+<br>
+
+------
+
+## Graduação - habilidades que diferenciam um sênior na everis
+
+*ACELERAÇÃO GLOBAL EVERIS*
+
+:calendar: 04/02/2021		:timer_clock: 19:00h		:hourglass: 2 horas
+
+<br>
+
+[Slides](/.pdfs/.pdf)
+
+*Notas da live*
+

@@ -31,7 +31,7 @@ Anotações das aulas. :pencil2::books:
 
 *Experts com grande experiência em projetos de missão crítica compartilham os princípios e competências essenciais para o dev desenvolver habilidades globais.*
 
-:calendar: 18/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 18/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -57,7 +57,7 @@ https://robsoncamargo.com.br/blog/o-que-e-metodologia-agil
 
 ## Linux - A introdução ao sistema operacional
 
-​	:hourglass: 10 horas
+​	:hourglass: 10 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -892,7 +892,7 @@ Gerenciador yum
 
 ## Shell script - Manipulando Arquivos
 
-​	:hourglass: 2 horas
+​	:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -1046,7 +1046,7 @@ https://github.com/davinyvidal/dio-shell-script
 
 *Aprenda mais sobre  a gerenciar dados armazenados em disco no cluster com o HDFS e como a gerenciar os recursos de um cluster utlizando o Yarn para alocar recursos computacionais da melhor maneira.*
 
-:calendar: 19/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 19/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 [Slides](/.pdfs/Aula-19-01-2021.pdf)
 
@@ -1510,7 +1510,7 @@ Perguntas
 
 *Aprenda mais sobre Zookeeper para gerenciar sistemas distribuídos,Sqoop para transferir dados entre bancos de dados relacionais e o Hadoop e gerencie os recursos de um cluster com Yarn.*
 
-:calendar: 20/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 20/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -1947,7 +1947,7 @@ sudo -u hdfs sqoop import \
 
 *Aprenda mais sobre Hive e Impala*
 
-:calendar: 21/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 21/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -1969,7 +1969,7 @@ sudo -u hdfs sqoop import \
 
 *Aprenda como trabalhar com NoSql trabalhando com o banco de dados Cassandra e Hbase.*
 
-:calendar: 22/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 22/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -1991,7 +1991,7 @@ sudo -u hdfs sqoop import \
 
 *Aprenda a base de Python necessária para se dar bem em engenharia de dados , passando pelos conceitos essenciais para trabalhar com uma aplicação corporativa de alto nível.*
 
-:calendar: 25/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 25/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -2011,7 +2011,7 @@ sudo -u hdfs sqoop import \
 
 *Aprenda como integrar o Python com Apache Kafka, um dos sistemas de mensageria corporativos mais utilizados no mercado.*
 
-:calendar: 26/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 26/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -2033,7 +2033,7 @@ sudo -u hdfs sqoop import \
 
 *Aprenda mais sobre Apache Spark, a ferramenta Big Data para o processamento de grandes conjuntos de dados mais utilizada em grandes projetos.*
 
-:calendar: 27/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 27/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -2055,7 +2055,7 @@ sudo -u hdfs sqoop import \
 
 *Eleve seus conhecimentos com PySpark e processe grandes quantidades e faça um streaming em tempo real.*
 
-:calendar: 28/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 28/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -2077,7 +2077,7 @@ sudo -u hdfs sqoop import \
 
 *Continue sua jornada para dominar PySpark vendo boas práticas de como ter mais domínio dos seus dados.*
 
-:calendar: 29/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 29/01/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -2101,7 +2101,7 @@ sudo -u hdfs sqoop import \
 
 *Aprenda como aproveitar o melhor do ambiente de nuvem para montar seu ambiente de big data de uma maneira profissional.*
 
-:calendar: 01/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 01/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -2123,7 +2123,7 @@ sudo -u hdfs sqoop import \
 
 *Aprenda como mais sobre uma linguagem Scala, explorando seus principais tópicos e as suas vantagens de utilização em ambiente de Big Data.*
 
-:calendar: 02/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 02/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -2145,7 +2145,7 @@ sudo -u hdfs sqoop import \
 
 *Dicas para construir APIs do rest ao estado restfull, todas as boas práticas que soluções de microserviços de alto nível precisam ter.*
 
-:calendar: 03/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas
+:calendar: 03/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
@@ -2167,7 +2167,7 @@ sudo -u hdfs sqoop import \
 
 *ACELERAÇÃO GLOBAL EVERIS*
 
-:calendar: 04/02/2021		:timer_clock: 19:00h		:hourglass: 2 horas
+:calendar: 04/02/2021		:timer_clock: 19:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 

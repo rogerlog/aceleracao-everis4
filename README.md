@@ -1957,6 +1957,14 @@ sudo -u hdfs sqoop import \
 
 
 
+https://github.com/felipedoamarals/Aceleracao_Global_Dev4_Everis/blob/c08b9995ee/Live%20%234.md
+
+
+
+
+
+
+
 <br>
 
 <br>

@@ -1955,9 +1955,447 @@ sudo -u hdfs sqoop import \
 
 *Notas da live*
 
+#### Introdução
+
+HQL: Hive Query Language
+
+- Hive é uma abstração em alto nível do MapReduce
+
+- Impala é um motor SQL de alta performance. O Impala não salva resultados intermediários no disco.
+
+#### **Arquitetura Hive**
+
+UI -> Driver -> Compiler -> Engine
+
+O Impala consome muita memória
+
+#### **Metastore**
+
+Hive e Impala trabalham com o mesmo dado. Tabelas no HDFS, metadado e metastore.
+
+Caminho padrão: /user/hive/warehouse/<table_name>
+
+#### Modelo de dados
+
+Dados em tabelas e partições
+
+#### Database
+
+```sql
+CREATE DATABASE loudacre;
+CREATE DATABASE IF NOT EXISTS loudacre;
+
+DROP DATABASE loudacre;
+```
+
+/user/hive/warehouse/loudacre.db
+
+#### Table
+
+```sql
+CREATE TABLE jobs (
+	id INT,
+	title STRING,
+	salary INT.
+	posted TIMESTAMP
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ',';
+```
+
+Tabela Gerenciada e tabela Externa
+
+#### Formatos de arquivos
+
+- Parquet
+- Avro (.avsc)
+- Orc
+
+#### Tipos de Tabelas
+
+External Table: Hive assume que não gerencia os dados.
+
+Managed Table: hdfs
+
+#### Particionamento
+
+Performance e leitura no cluster. Não particione pouco demais e nem demais.
+
+#### Parte Prática
+
+Foi utilizado a VM3
+
+<u>Acessando o Hive e Impala</u>
+
+Pelo putty. Alguns comandos úteis
+
+```shell
+hive
+```
+
+```shell
+impala-shell
+```
+
+```shell 
+hadoop -h
+man hadoop
+man hdfs
+```
+
+No Hive
+
+```shell
+show database
+create database teste01;
+```
+
+Para criar Tabela. Obs: Cuidado para não inserir no default. `create table teste01.teste01 (id int);`
+
+Mostrar todas as tabelas `show tables;`
+
+Printar o header  `set hive.cli.print.header=true;`
+
+`use teste01`
+
+Inserindo dados
+
+```sql
+insert into table teste01 values(1);
+```
+
+`show tables;` *Exibe as tabelas*
+
+Exibindo os BD e tabelas
+
+```shell
+hdfs dfs -ls /user/hive/warehouse
+```
+
+```shell
+hdfs dfs -ls /user/hive/warehouse/teste01.db/teste01
+```
+
+*Quando não especifico o tipo da tabela, por default fica do tipo Gerenciada.*
+
+#### Criando uma tabela Externa
+
+```sql
+create external table teste03 (id int);
+```
+
+```sql
+show create table teste01;
+```
+
+*Carregando arquivos*. Tipo string
+
+```shell
+ls -ltrh
+cat employee.txt
+```
+
+Dentro do terminal do <u>Hive</u>. Limpar a tela tipo o clear no Linux. `!clear`
+
+- `!clear`
+- `!pwd`
+- `!ls -ltrh;`
+
+Criando uma tabela no Hive
+
+```sql
+CREATE EXTERNAL TABLE TB_EXT_EMPLOYEE (
+      id STRING,
+      groups STRING,
+      age STRING,
+      active_lifestyle STRING,
+      salary STRING)
+      ROW FORMAT DELIMITED FIELDS
+      TERMINATED BY '\;'
+      STORED AS TEXTFILE
+      LOCATION '/user/hive/warehouse/external/tabelas/employee'
+      tblproperties ("skip.header.line.count"="1"); 
+```
+
+Verificando o arquivo
+
+```shell
+hdfs dfs -ls /user/hive/warehouse/external/tabelas/employee
+```
+
+```shell
+hdfs dfs -ls /user/hive/warehouse/external/tabelas
+```
+
+Colocar o arquivo emplyee.txt dentro do diretório ../tabelas/employee
+
+```shell
+hdfs dfs -put /home/everis/employee.txt /user/hive/warehouse/external/tabelas/employee
+```
+
+Visualizar o conteúdo
+
+```shell
+hdfs dfs -cat /user/hive/warehouse/external/tabelas/employee/employee.txt
+```
+
+Selecionando dados da tabela
+
+```sql
+select count(*) from tb_ext_employee;
+```
+
+Dar privilégio para arquivos. *Muito parecido com linux.*
+
+```shell
+hdfs dfs -ls /user/hive/warehouse/external/tabelas/employee
+hdfs dfs -chmod 775 /user/hive/warehouse/external/tabelas/employee
+hdfs dfs -ls /user/hive/warehouse/external/tabelas/employee
+```
+
+~~*Procurar tratamento dos dados para inserção.*~~
+
+Criar outra tabela
+
+```sql
+CREATE TABLE TB_EMPLOYEE(
+      id INT,
+      groups STRING,
+      age INT,
+      active_lifestyle STRING,
+      salary DOUBLE)
+      PARTITIONED BY (dt_processamento STRING) #Coluna do tipo partição.
+      ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
+      STORED AS PARQUET TBLPROPERTIES ("parquet.compression"="SNAPPY"); #formato parquet Snappy
+```
+
+Inserindo dados. 
+
+```sql
+insert into table TB_EMPLOYEE partition (dt_processamento='20201118')
+      select 
+      id,
+      groups,
+      age,
+      active_lifestyle,
+      salary
+      from TB_EXT_EMPLOYEE;
+```
+
+Verificando..
+
+```shell
+hdfs dfs -ls /user/hive/warehouse/teste01.db/tb_employee
+```
+
+```shell
+#Copiar arquivo para o disco local
+hdfs dfs -copyToLocal /user/hive/warehouse/teste01.db/tb_employee/dt_processamento=20201118/000000_0 .
+
+#Visualizar info do schema utilizando o parquet-tools
+parquet-tools schema 000000_0
+```
+
+Criando tabela
+
+```sql
+create external table localidade(
+      street string,
+      city string,
+      zip string,
+      state string,
+      beds string,
+      baths string,
+      sq__ft string,
+      type string,
+      sale_date string,
+      price string,
+      latitude string,
+      longitude string)
+      PARTITIONED BY (particao STRING)
+      ROW FORMAT DELIMITED FIELDS TERMINATED BY ","
+      STORED AS TEXTFILE
+      location '/user/hive/warehouse/external/tabelas/localidade'
+      tblproperties ("skip.header.line.count"="1");
+```
+
+Dentro do Hive, load de um arquivo
+
+```shell
+load data local inpath '/home/everis/base_localidade.csv'
+into table teste01.localidade partition (particao='2021-01-21');
+```
+
+Conferindo...
+
+```sql
+select count(*) from localidade;
+```
+
+No HDFS...
+
+```shell
+hdfs dfs -ls /user/hive/warehouse/external/tabelas/localidade/particao=2021-01-21
+```
+
+Visualizando o conteúdo do arquivo
+
+```shell
+hdfs dfs -cat /user/hive/warehouse/external/tabelas/localidade/particao=2021-01-21/base_localidade.csv
+```
+
+Criando tabela parquet
+
+```sql
+create table tb_localidade_parquet(
+      street string,
+      city string,
+      zip string,
+      state string,
+      beds string,
+      baths string,
+      sq__ft string,
+      type string,
+      sale_date string,
+      price string,
+      latitude string,
+      longitude string)
+      PARTITIONED BY (particao STRING)
+      STORED AS PARQUET;
+```
+
+Inserindo dados.
+
+```sql
+INSERT into TABLE tb_localidade_parquet
+      PARTITION(PARTICAO='01')
+      SELECT
+      street,
+      city,
+      zip,
+      state,
+      beds,
+      baths,
+      sq__ft,
+      type,
+      sale_date,
+      price,
+      latitude,
+      longitude
+      FROM localidade;
+```
+
+#### Acessando o Impala
+
+```shell
+impala-shell
+show databases;
+```
+
+Não está aparecendo o database 01 porque quando a tabela é criada no Hive, vamos precisar atualizar essa informação para o Impala. Porque o Impala já leu *metastore*. Precisamos dar um refresh.
+
+```sql
+select * from tb_localidade_parquet
+show tables;
+```
+
+Queremos visular essa tabela no Impala. Como?
+
+Vamos invalidar os dados.
+
+```shell
+INVALIDATE METADATA teste01.tb_localidade_parquet;
+```
+
+```shell
+show databases
+show tables
+```
+
+*Obs: Se o Impala não estiver no ar, rodar novamente o script. Isso pode acontecer devido a falta de recursos(memória) da máquina. Vai precisar para alguns serviços pra funcionar melhor*
+
+Conferindo ... `use teste01;` e `show tables;`
+
+Precisamos invalidar as outras tabelas também.
+
+```shell
+INVALIDATE METADATA teste01.localidade;
+```
+
+Verificando relacionamento entre as tabelas com o comando `desc tb_ext_employee;`. Mesmo sem chave estrangeira podemos relacionar várias tabelas.
+
+```sql
+select
+      tab01.id,
+      tab02.zip
+      from tb_ext_employee tab01
+      full outer join tb_localidade_parquet tab02
+      on tab01.id = tab02.zip;
+```
+
+```sql
+select
+      tab01.id,
+      tab02.zip,
+      "teste" col_fixa,
+      concat(tab01.id, tab02.zip) as col_concatenada
+      from tb_ext_employee tab01
+      full outer join tb_localidade_parquet tab02
+      on tab01.id = tab02.zip;
+```
+
+Criada o relacionamento entre uma coluna fixa e outra concatenada.
+
+Em um arquivo real.
+
+Help do hive
+
+```shell
+hive -H
+```
+
+Vai acessar o Hive, utilizar o select e sair do Hive
+
+```shell
+hive -S -e "select count(*) from teste01.localidade;"
+```
+
+#### Script Exemplo do Hive
+
+```shell
+#!/bin/bash
+
+dt_processamento=$(date '+%Y-%m-%d')
+path_file='/home/cloudera/hive/datasets/employee.txt'
+table=beca.ext_p_employee
+load=/home/cloudera/hive/load.hql
+
+hive -hiveconf dt_processamento=${dt_processamento} -hiveconf table=${table} -hiveconf path_file=${path_file} -f $load 2>> log.txt
+
+hive_status=$?
+
+if [ ${hive_status} -eq 0 ];
+then
+        echo -e "\nScript executado com sucesso"
+else
+        echo -e "\nHouve um erro na ingestao do arquivo"
+impala-shell -q 'INVALIDATE METADATA beca.ext_p_employee;'
+
+fi 
+
+LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PARTITION(dt_processamento='${hiveconf:dt_processamento}');
+```
+
+<br>
+
+*<u>Perguntas</u>*
+
+- Ferramenta HUE;
+- 
 
 
-https://github.com/felipedoamarals/Aceleracao_Global_Dev4_Everis/blob/c08b9995ee/Live%20%234.md
+
+
 
 
 
@@ -2138,6 +2576,12 @@ https://github.com/felipedoamarals/Aceleracao_Global_Dev4_Everis/blob/c08b9995ee
 [Slides](/.pdfs/.pdf)
 
 *Notas da live*
+
+
+
+
+
+
 
 
 

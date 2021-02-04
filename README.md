@@ -16,7 +16,7 @@ Anotações das aulas. :pencil2::books:
 - [ ] [Criando pipelines de dados eficientes - Parte 2](#criando-pipelines-de-dados-eficientes---parte-2)
 - [ ] [Orquestrando Big Data em Ambiente de Nuvem](#orquestrando-bigdata-em-ambiente-de-nuvem)
 - [ ] [Scala: o poder de uma linguagem multiparadigma](#scala-o-poder-de-uma-linguagem-multiparadigma)
-- [ ] [O que você precisa saber para construir APIs verdadeiramente restfull](#O-que-você-precisa-saber-para-construir-APIs-verdadeiramente-restfull)
+- [ ] [O que você precisa saber para construir APIs verdadeiramente restfull](#o-que-você-precisa-saber-para-construir-apis-verdadeiramente-restfull)
 - [ ] [Graduação - habilidades que diferenciam um sênior na everis](#graduação---habilidades-que-diferenciam-um-sênior-na-everis)
 
 
@@ -2412,6 +2412,12 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 
 
+
+
+
+
+
+
 <br>
 
 <br>
@@ -2615,9 +2621,82 @@ https://mvnrepository.com
 
 <br>
 
-<a href="/.pdfs/Live-02-02-2021-Scala Multiparadigma.pdf" target="_blank">Slides</a>
+<a href="/.pdfs/Live-03-02-2021-APIsRestfull.pdf" target="_blank">Slides</a>
 
 *Notas da live*
+
+#### Parte 1: O que é API
+
+- Application Program Interface
+- Pense em API como a camada que esconde as regras e possibilita uma comunicação externa
+- Facilita muito a integração
+- Existem várias metodologias ( ou arquiteturas ), como por exemplo: SOA, Rest, uso por meio de SDK
+
+#### Parte 2: Rest / Restful
+
+**Rest:** Metodologia / Arquitetura
+
+**Restful:** API que faz uso do Rest
+
+*Características*
+
+- Trafego dos dados por JSON ( os antigos ainda usam xml )
+
+- Padronização de endpoint’s
+
+- Uso de HTTP Methods ( Get, Post, Put, Delete )
+
+- Fácil entendimento ao iniciar uma integração
+
+##### Http Methods
+
+- Get: Sempre obtém os dados
+
+- Post: Cria um novo registro ou Recurso
+
+- Put: Atualiza um registro existente
+
+- Delete: Remove um registro existente
+
+##### Padrões
+
+- Get: /api/dev/user
+- Post: /api/dev/user 
+- Put: /api/dev/user/{id}
+- Delete: /api/dev/user/{id}
+
+##### Erros comuns
+
+- Post: /api/dev/user/{id}
+- Post: /api/dev/user/create
+- Put: /api/dev/user
+- Delete: /api/dev/user?id=2
+
+##### Status Codes
+
+Geralmente:
+
+- 2x…. = Sucesso
+- 4x…. = Erro no cliente
+- 5x…. = Erro server side
+
+*Status comuns:*
+
+- 200 = OK
+- 401 = Unauthorized
+- 403 = Forbidden
+- 404 = Not found
+- 500 = Internal Server Error
+- 504 = Gateway Timeout
+
+Referência
+www.httpstatuses.com
+
+#### Postman
+
+Abrir o arquivo [Aceleracao Everis - Postman.postman_collection.json](/live03-02-2021/Aceleracao Everis - Postman.postman_collection.json)
+
+
 
 
 

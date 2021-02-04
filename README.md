@@ -2694,7 +2694,7 @@ www.httpstatuses.com
 
 #### Postman
 
-Abrir o arquivo [Aceleracao Everis - Postman.postman_collection.json](/live03-02-2021/Aceleracao Everis - Postman.postman_collection.json)
+Abrir o arquivo [Aceleracao Everis - Postman.postman_collection.json](/live03-02-2021/Aceleracao%20Everis%20-%20Postman.postman_collection.json)
 
 
 

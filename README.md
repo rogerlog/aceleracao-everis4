@@ -2637,7 +2637,5 @@ https://mvnrepository.com
 
 <br>
 
-[Slides](/.pdfs/.pdf)
-
 *Notas da live*
 

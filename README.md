@@ -2,24 +2,22 @@
 
 Anotações das aulas. :pencil2::books:
 
-- [Abertura - Como trabalhar em um ambiente ágil e global](#abertura---como-trabalhar-em-um-ambiente-ágil-e-global)
-- [Linux: A introdução ao sistema operacional](#linux---a-introdução-ao-sistema-operacional)
-- [Shell script - Manipulando Arquivos](#shell-script---manipulando-arquivos)
-- [Monitoramento de clusters Hadoop de alto nível com HDFS e Yarn](#monitoramento-de-clusters-hadoop-de-alto-nível-com-hdfs-e-yarn)
-- [Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop](#orquestrando-ambientes-de-big-data-distribuídos-com-zookeeper-yarn-e-sqoop)
-- [Como realizar consultas de maneira simples no ambiente complexo de Big Data com HIVE e Impala](#como-realizar-consultas-de-maneira-simples-no-ambiente-complexo-de-bigdata-com-hive-e-impala)
-- [Explorando o poder do NoSQL com Cassandra e Hbase](#explorando-o-poder-do-nosql-com-cassandra-e-hbase)
-- [Intensivo de Python - O mínimo que você precisa saber](#intensivo-de-python---o-mínimo-que-você-precisa-saber)
-- [Trabalhando com serviços de mensageria real time com Python e Kafka na prática](#trabalhando-com-serviços-de-mensageria-real-time-com-python-e-kafka-na-prática)
-- [Processando grandes conjuntos de dados de forma paralela e distribuída com Spark](#processando-grandes-conjuntos-de-dados-de-forma-paralela-e-distribuída-com-spark)
-- [Criando pipelines de dados eficientes - Parte 1](#criando-pipelines-de-dados-eficientes---parte-1)
-- [Criando pipelines de dados eficientes - Parte 2](#criando-pipelines-de-dados-eficientes---parte-2)
-- [Orquestrando Big Data em Ambiente de Nuvem](#orquestrando-bigdata-em-ambiente-de-nuvem)
-- [Scala: o poder de uma linguagem multiparadigma](#scala-o-poder-de-uma-linguagem-multiparadigma)
-- [O que você precisa saber para construir APIs verdadeiramente restfull](#O-que-você-precisa-saber-para-construir-APIs-verdadeiramente-restfull)
-- [Graduação - habilidades que diferenciam um sênior na everis](#graduação---habilidades-que-diferenciam-um-sênior-na-everis)
-
-
+- [x] [Abertura - Como trabalhar em um ambiente ágil e global](#abertura---como-trabalhar-em-um-ambiente-ágil-e-global)
+- [x] [Linux: A introdução ao sistema operacional](#linux---a-introdução-ao-sistema-operacional)
+- [x] [Shell script - Manipulando Arquivos](#shell-script---manipulando-arquivos)
+- [x] [Monitoramento de clusters Hadoop de alto nível com HDFS e Yarn](#monitoramento-de-clusters-hadoop-de-alto-nível-com-hdfs-e-yarn)
+- [x] [Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop](#orquestrando-ambientes-de-big-data-distribuídos-com-zookeeper-yarn-e-sqoop)
+- [x] [Como realizar consultas de maneira simples no ambiente complexo de Big Data com HIVE e Impala](#como-realizar-consultas-de-maneira-simples-no-ambiente-complexo-de-bigdata-com-hive-e-impala)
+- [ ] [Explorando o poder do NoSQL com Cassandra e Hbase](#explorando-o-poder-do-nosql-com-cassandra-e-hbase)
+- [ ] [Intensivo de Python - O mínimo que você precisa saber](#intensivo-de-python---o-mínimo-que-você-precisa-saber)
+- [ ] [Trabalhando com serviços de mensageria real time com Python e Kafka na prática](#trabalhando-com-serviços-de-mensageria-real-time-com-python-e-kafka-na-prática)
+- [ ] [Processando grandes conjuntos de dados de forma paralela e distribuída com Spark](#processando-grandes-conjuntos-de-dados-de-forma-paralela-e-distribuída-com-spark)
+- [ ] [Criando pipelines de dados eficientes - Parte 1](#criando-pipelines-de-dados-eficientes---parte-1)
+- [ ] [Criando pipelines de dados eficientes - Parte 2](#criando-pipelines-de-dados-eficientes---parte-2)
+- [ ] [Orquestrando Big Data em Ambiente de Nuvem](#orquestrando-bigdata-em-ambiente-de-nuvem)
+- [ ] [Scala: o poder de uma linguagem multiparadigma](#scala-o-poder-de-uma-linguagem-multiparadigma)
+- [ ] [O que você precisa saber para construir APIs verdadeiramente restfull](#O-que-você-precisa-saber-para-construir-APIs-verdadeiramente-restfull)
+- [ ] [Graduação - habilidades que diferenciam um sênior na everis](#graduação---habilidades-que-diferenciam-um-sênior-na-everis)
 
 
 
@@ -2391,7 +2389,6 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 *<u>Perguntas</u>*
 
 - Ferramenta HUE;
-- 
 
 
 
@@ -2419,7 +2416,7 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+[Slides](/.pdfs/Live-22-01-2021-Cassandra.pdf)
 
 *Notas da live*
 

@@ -2390,16 +2390,6 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 - Ferramenta HUE;
 
-
-
-
-
-
-
-
-
-
-
 <br>
 
 <br>
@@ -2438,9 +2428,26 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+<a href="/.pdfs/Live-25-01-2021-Python.pdf" target="_blank">Slides</a>
+
+<a href="https://github.com/huguinho-alves/python_aceleracao_everys" target="_blank">Github Referência</a>
 
 *Notas da live*
+
+#### Ferramentas
+
+- <a href="https://colab.research.google.com/" target="_blank">Google Colab</a>
+- Pandas
+
+
+
+
+
+
+
+
+
+
 
 <br>
 
@@ -2458,9 +2465,17 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+<a href="/.pdfs/Live-26-01-2021-Kafka.pdf" target="_blank">Slides</a>
 
 *Notas da live*
+
+
+
+
+
+
+
+
 
 
 
@@ -2480,7 +2495,7 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+<a href="/.pdfs/Live-27-01-2021-Spark.pdf" target="_blank">Slides</a>
 
 *Notas da live*
 
@@ -2502,7 +2517,7 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+<a href="/.pdfs/Live-28-01-2021-Pipelines1.pdf" target="_blank">Slides</a>
 
 *Notas da live*
 
@@ -2524,7 +2539,7 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+<a href="/.pdfs/Live-28-01-2021-Pipelines1.pdf" target="_blank">Slides</a>
 
 *Notas da live*
 
@@ -2548,9 +2563,11 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+<a href="/.pdfs/Live-01-02-2021-BigDataNuvem.pdf" target="_blank">Slides</a>
 
 *Notas da live*
+
+
 
 
 
@@ -2570,11 +2587,11 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+<a href="/.pdfs/Live-02-02-2021-Scala Multiparadigma.pdf" target="_blank">Slides</a>
 
 *Notas da live*
 
-
+https://mvnrepository.com
 
 
 
@@ -2598,7 +2615,7 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 <br>
 
-[Slides](/.pdfs/.pdf)
+<a href="/.pdfs/Live-02-02-2021-Scala Multiparadigma.pdf" target="_blank">Slides</a>
 
 *Notas da live*
 

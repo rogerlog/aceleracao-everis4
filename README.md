@@ -2503,7 +2503,7 @@ Column Families
 
 **Arquitetura do HBase**
 
-![](\.img\exemplo1Hbase.png)
+![](.img\exemplo1Hbase.png)
 
 *Zookeeper: faz os nós conversarem entre si*
 

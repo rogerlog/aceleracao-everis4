@@ -8,7 +8,7 @@ Anotações das aulas. :pencil2::books:
 - [x] [Monitoramento de clusters Hadoop de alto nível com HDFS e Yarn](#monitoramento-de-clusters-hadoop-de-alto-nível-com-hdfs-e-yarn)
 - [x] [Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop](#orquestrando-ambientes-de-big-data-distribuídos-com-zookeeper-yarn-e-sqoop)
 - [x] [Como realizar consultas de maneira simples no ambiente complexo de Big Data com HIVE e Impala](#como-realizar-consultas-de-maneira-simples-no-ambiente-complexo-de-bigdata-com-hive-e-impala)
-- [ ] [Explorando o poder do NoSQL com Cassandra e Hbase](#explorando-o-poder-do-nosql-com-cassandra-e-hbase)
+- [x] [Explorando o poder do NoSQL com Cassandra e Hbase](#explorando-o-poder-do-nosql-com-cassandra-e-hbase)
 - [ ] [Intensivo de Python - O mínimo que você precisa saber](#intensivo-de-python---o-mínimo-que-você-precisa-saber)
 - [ ] [Trabalhando com serviços de mensageria real time com Python e Kafka na prática](#trabalhando-com-serviços-de-mensageria-real-time-com-python-e-kafka-na-prática)
 - [ ] [Processando grandes conjuntos de dados de forma paralela e distribuída com Spark](#processando-grandes-conjuntos-de-dados-de-forma-paralela-e-distribuída-com-spark)
@@ -16,8 +16,8 @@ Anotações das aulas. :pencil2::books:
 - [ ] [Criando pipelines de dados eficientes - Parte 2](#criando-pipelines-de-dados-eficientes---parte-2)
 - [ ] [Orquestrando Big Data em Ambiente de Nuvem](#orquestrando-bigdata-em-ambiente-de-nuvem)
 - [ ] [Scala: o poder de uma linguagem multiparadigma](#scala-o-poder-de-uma-linguagem-multiparadigma)
-- [ ] [O que você precisa saber para construir APIs verdadeiramente restfull](#o-que-você-precisa-saber-para-construir-apis-verdadeiramente-restfull)
-- [ ] [Graduação - habilidades que diferenciam um sênior na everis](#graduação---habilidades-que-diferenciam-um-sênior-na-everis)
+- [x] [O que você precisa saber para construir APIs verdadeiramente restfull](#o-que-você-precisa-saber-para-construir-apis-verdadeiramente-restfull)
+- [x] [Graduação - habilidades que diferenciam um sênior na everis](#graduação---habilidades-que-diferenciam-um-sênior-na-everis)
 
 
 
@@ -2410,11 +2410,978 @@ LOAD DATA LOCAL INPATH '${hiveconf:path_file}' INTO TABLE ${hiveconf:table} PART
 
 *Notas da live*
 
+#### Parte 1: Conceito NoSQL e porquê utilizamos no Big Data?
+
+Significados: 
+
+NoSQL = “No SQL”, “Não SQL” ou “Não Relacional” 
+
+NoSQL = “Not Only SQL” 
+
+Termo genérico para representar os bancos de dados não relacionais. 
+
+O NoSQL emergiu como uma alternativa de banco de dados não relacionado, normalmente evitando operações de “join”, é distribuído, open-source, escalável na horizontal, livre de modelagens ou schema (não é necessário fixar modelos para as tabelas), suporta replicação, acesso via API de operações e eventualmente consistente.
+
+**Relacional vs NoSQL**             
+
+| Quando considerar NoSQL                                      | Quando considerar Relacional                                 |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Carga de trabalho de alto volume que exigem grande escala    | Carga de trabalho é consistente e requer escala média para grande |
+| Carga de trabalho não exigem garantias do ACID               | Garantias de ACID são necessárias                            |
+| Os dados são dinâmicos e frequentemente alterados            | Dados são previsíveis e altamente estruturados               |
+| Os dados podem ser expressos sem relações (joins)            | Os dados são expressos de maneira relacional                 |
+| Alto velocidade de gravação e a segurança de gravação não é crítica | A garantia de gravação é um requisito                        |
+| Consulta de dados é simples e tende a ser simples            | Consultas e relatórios complexos                             |
+| Dados exigem uma ampla distribuição geográfica               | Usuários são mais centralizados                              |
+
+**Tipos de NoSQL**
+
+- **SQL**
+  - Relational
+  - Analytical (OLAP)
+- **NoSQL**
+  - Key-Value
+  - Column-Family
+  - Graph
+  - Document
+
+**Teorema de CAP**
+
+O teorema CAP ou teorema de Brewer indica que o armazenamento de dados distribuídos só podem atender dois dos três atributos: **Consistência, Disponibilidade, Partição Tolerante a Falhas.**
+
+Tanto Hadoop e HBase atendem CP, porque possuem um ponto de falha que é respectivamente o NamedNode e HMaster que não possuem redundância dos dados dos próprios serviços para todos os nós do cluster.
+
+**Por quê NoSQL no Big data?**
+
+Limitações do Hadoop
+
+- Hadoop (MapReduce) pode executar apenas processamento batch e os dados são acessados de forma sequencial, isso significa que é necessário percorrer todo o conjunto de arquivos (scan search) mesmo para os jobs mais simples.
+
+Cenário
+
+- Um grande conjunto de dados (dataset) quando processado com um outro conjunto de dados, ambos serão processados de maneira sequencial, nesse momento uma nova solução é necessária para acessar qualquer ponto do dataset (linhas) e que leve um tempo menor para retornar.
+- Aplicações como HBase, Cassandra, Dynamo e MongoDB, etc, são banco dados que armazenam grandes quantidade de dados e os acessos à esses dados são realizados de forma aleatória em termos de posição do registro e do tempo.
+
+#### Parte 2: Introdução HBase e Cassandra
+
+**O que é o Apache Hbase?**
+
+**HBase** é um banco de dados distribuído e orientado a colunas (Column Family ou Wide Column).
+
+Uma definição mais técnica:
+
+O armazenamento do HBase é um esparso, distribuído, persistente, multidimensional e ordenado **Map**.
+
+As maiores desvantagens do Hbase é não ter uma linguagem própria de SQL, não suportar índices em colunas fora do rowkey e não suportar tabelas secundárias de índices.
+
+A maior vantagem é a facilidade e integração com o ecossistemas Hadoop.
+
+**Map** é indexado por uma linha chave (row key), coluna chave (column key), e um coluna timestamp.
+
+Cada valor no Map é interpretado como um vetor de bytes (array of bytes).
+
+O **array of bytes** nos permite gravar portanto qualquer informação se for necessário, inclusive documentos, arquivos JSON, CSV, etc.
+
+Portanto podemos entender que o núcleo de dados do HBase é um Map.
+
+Na maioria das linguagens de programação essa abstração de estrutura de dados existe e pode ser representada como um conjunto de chaves e conjunto de valores. Cada chave é associada à um valor.
+
+```json
+{
+    "zzzzz" : "Olá",
+    "xyz" : "hello",
+    "aaaab" : "world Hbase!",
+    "1" : "x",
+    "aaaaa" : "y"
+} 
+```
+
+**Multidimensional e Ordenado**
+Esquecendo o conceito tradicional de linhas e colunas do mundo relacional, pense no multidimensional como um Map que contém Maps.
+
+Column Families
+
+**Arquitetura do HBase**
+
+![](\.img\exemplo1Hbase.png)
+
+*Zookeeper: faz os nós conversarem entre si*
+
+##### HBase Client
+
+Responsável por encontrar o RegionServers que estão atendendo as linhas em particular que estão sendo  utilizadas, para isso é consultado uma base de dados de metadados interna do Hbase, **hbase:meta** que fica no Zookeeper. 
+
+Depois de localizado o RegionServer, o client se comunica para solicitar requisição de leitura/gravação do registro, isso até versão 2.x.y.
+
+Apartir da versão 3.x.y. o HMaster controla as requisições leitura/gravação.
+
+Caso ocorra erro na comunicação com o RegionServer por alguma falha será atribuído pelo load balancer do HMaster um novo RegionServer.
+
+##### HMaster
+
+Responsável por monitorar todos as instâncias de RegionServer no cluster. É meio para todas as  solicitações de mudanças de metadados. 
+
+Em um ambiente distribuído de produção esse serviço é executado no NamedNode do Hadoop. 
+
+É possível ter vários nós de um ambiente clusterizado atuar como master, porém só um pode ficar ativo, o restante fica passivo, caso ocorra alguma falha no master principal.
+
+##### RegionServer
+
+Responsável por monitorar todos as instâncias de RegionServer no cluster. É meio para todas as solicitações de mudanças de metadados. 
+
+Em um ambiente distribuído de produção esse serviço é executado no NamedNode do Hadoop. 
+
+É possível ter vários nós de um ambiente clusterizado atuar como master, porém só um pode ficar ativo, o restante fica passivo, caso ocorra alguma falha no master principal.
+
+##### Regions
+
+Representam os elementos básicos de disponibilidade e distribuição das tabelas e incluem o armazenamento de cada column family.
+
+Hierarquia dos Objetos no HBase
+
+```
+Table (Tabela HBase)
+	Region (Regiões da tabela)
+		Store (Unidade de armazenamento por ColumnFamily para cada região da tabela)
+			MemStore (MemStore para cada armazenamento em cada região da tabela)
+			StoreFile (StoreFiles para cada armazenamento em cada região da tabela)
+				Block (Arquivos que servem como blocos dentro do StoreFile dentro do armazenamento em cada região de uma tabela)
+```
+
+##### Apache Zookeeper
+
+O tipo de instalação distribuída do Hbase é necessário que o Apache Zookeeper esteja funcionando no cluster. 
+
+O Apache Zookeeper é o responsável por dar visibilidade a todos os nós de serviços do HBase de quem é o master atual, são os servidores que atendem ao papel RegionServers, Region. Toda configuração que é
+padrão para cada um dos papéis são armazenados no Zookeeper, portanto ele tem um papel fundamental de manter sincronizado toda a parametrização em comum para todos os nós. 
+
+O cliente HBase se comunica com os RegionServer através do Zookeeper.
+
+**Apache HDFS**
+
+É o sistema de arquivos do ecossistema do Hadoop. Cada arquivo está armazenado em múltiplos blocos e mantem tolerância a falhas, os blocos são replicados pelos cluster Hadoop.
+
+HDFS é utilizado pelo componentes do HBase. 
+
+Os arquivos gerenciados pelo HBase são criados dentro do HDFS.
+
+| HBASE                                                        | HDFS com Hive/MR                                          |
+| ------------------------------------------------------------ | --------------------------------------------------------- |
+| Baixa latência nas operações                                 | Alta latência nas operações                               |
+| Acesso a leitura e gravação aleatória                        | Grava única e leitura muita vezes                         |
+| Acessado através de comandos shell, cliente API em Java, REST, Avro ou Thrift | Acessado primeiramente através dos Jobs do MR(Map Reduce) |
+
+**O que é o Apache Cassandra?**
+
+O Cassandra é um banco de dados distribuído e orientado a colunas (Wide Column).
+Diferente do Hbase, os dados armazenados são tipados e há conceitos mais complexos de modelagem como chave primária composta, partition key e cluster key.
+O Cassandra possui a linguagem SQL (CQL) contém semelhante com SQL ANSI porém algumas operações não são suportadas / recomendadas, por exemplo: joins, alguns tipos de agrupamentos e tipos de filtros.
+
+A recomendação para modelagem de dados no Cassandra, é pensar em quais query devem ser onsumidas e agregar as informações em uma determinada tabela.
+
+Uma grande diferença para o Hbase, é que o <u>Cassandra suporta tabela secundárias de índices e permite filtros em colunas fora da primary key</u>.
+
+##### Arquitetura do Cassandra
+
+A característica principal do Cassandra é armazenar em múltiplos nós sem nenhum ponto de falha. Conexão entre os nós é realizada de ponto a ponta, utilizando um protocolo chamado **Gossip**.
+
+![](/.img/Cassandra1.png)
+
+##### Componentes do Cassandra
+
+- **Node**: Nó responsável por armazenar os dados, é um componente básico da Arquitetura.
+- **Data Center**: Representa uma coleção de nós.
+- **Cluster**: Representa a coleção de vários Data Centers.
+- **Commit Log**: Cada operação é escrita no log de commit. Esse logo é utilizado para recuperação em
+  caso de incidents graves.
+- **Mem-table**: Depois que o dado é escrito no log de commit, o dado é escrito no Mem-table. O dado
+  nessa localidade é temporário. 
+- **SSTable**: Quando o Mem-Table atingi um limite, o dado é gravado no disco no SSTABLE.
+
+#### Parte 3: Comandos Gerais
+
+**hbase shell**
+
+> No console do HBase é possível u tilizar todos os comandos de manipulação de
+> informação e comandos gerais.
+> Atualmente o HBase até a versão 3.x.y não suporta uma query de consulta (SQL).
+> Os comandos mais básicos de manipulação das informação são: put, get, scan,
+> drop, disable, etc.
+
+**status**
+
+> Comando dá detalhes sobre o sistema como o número de servidores presente, quantidade
+> de servidores ativos, média de carga, quantidade de Stored ativos, é possível passar qualquer parâmetro dependendo em qual detalhe seja necessário saber sobre o sistema.
+>
+> Variações 
+>
+> - status 'simple'
+>
+> - status 'summary'
+>
+> - status 'detailed'
+
+**version**
+
+> Exibe a versão do HBase. 
+
+**table_help**
+
+> Comando que auxilia como utili zar comandos que se referenciam a uma tabela.
+> É possível pegar a referencia de uma tabela cria e utilizar como variável para próximas
+> operações.
+
+##### Os comandos abaixo são utilizados para operar as tabelas no HBase.
+
+- **create** – Cria uma tabela.
+- **list** – Lista todas as tabelas no HBase independente do namespace.
+- **disable** – Desabilita uma tabela.
+- **is_disabled** – Checa se uma tabela está desabilitada.
+- **enable** – Habilita uma tabela.
+- **is_enabled** – Checa se uma tabela está habilitada.
+- **describe** – Exibe informações de definição de uma tabela.
+- **alter** – Realiza alterações em uma tabela.
+- **exists** – Verifica se uma tabela existe.
+- **drop** – Exclui um tabela do HBase.
+- drop_all – Exclue todas as que se aplicam a um padrão de nomes via regra de Regex.
+
+**CREATE_NAMESPACE**
+
+> Permite criar uma namespace no HBase.
+> <u>Sintaxe:</u>
+> create_namespace '<namespace>' {PROPRIEDADES}
+> <u>Exemplo:</u>
+> create_namespace 'empresa'
+
+**CREATE**
+
+> Permite criar uma tabela no HBase.
+> <u>Sintaxe:</u>
+> create '[<namespace>]:<nome tabela>', '<nome da column family>' {PROPRIEDADES}
+> <u>Exemplo:</u>
+> Imagine uma tabela de funcionarios
+
+| Row key | Dados Pessoais | Dados Profissional |
+| ------- | -------------- | ------------------ |
+|         |                |                    |
+|         |                |                    |
+
+##### Exemplo criação da tabela de funcionários
+
+Comando:
+
+```sql
+create 'funcionario', 'pessoais', 'profissionais'
+create 'funcionario', {NAME=>'pessoais', VERSIONS=>5}, {NAME=> 'profissionais',
+VERSIONS =>4}
+```
+
+Liste todas as tabelas
+
+**list**
+
+Com o comando list é possível visualizar todas as tabelas presentes e criados no
+HBase.
+É possível passar expressões regulares para realizar buscas mais personalizadas.
+
+**DESCRIBE**
+O comando exibe informações sobre as column families presentes na tabela
+mencionada, também traz informações sobre os filtros associados, versões, se
+a tabela está em memória, etc.
+<u>Sintaxe:</u>
+describe '<nome da tabela>'
+<u>Comando:</u>
+describe 'funcionario'
+
+**DISABLE**
+Desabilita a tabela mencionada, caso seja necessário que uma tabela seja deletada ou excluída, primeiro é necessário desabilita-la.
+Após desabilitada ainda é possível lista-la (list) em conjunto com as demais tabelas e checar sua existência com comando exists, porém não é possível mais escanear (scan).
+<u>Sintaxe:</u>
+disable '<nome da tabela>'
+<u>Comando:</u>
+disable 'funcionario'
+
+**DISABLE_ALL**
+Desabilita as tabelas que atendem dentro do critério de expressão regular.
+
+Para evitar interrupções importantes esse comando tem uma confirmação manual (Sim ou Não) antes de efetivar a desabilitação.
+<u>Sintaxe:</u>
+disable_all '<prefixo da tabela>.'
+<u>Comando:</u>
+disable_all 'func.'
+
+**ENABLE**
+Habilita a tabela mencionada no comando. Se a tabela está desabilitada no primeiro momento e não foi deletada ou excluída, e desejamos reutilizar a tabela, então primeiro nos precisamos habilita-la novamente.
+<u>Sintaxe:</u>
+enable '<nome da tabela>'
+<u>Comando:</u>
+enable 'funcionario
+
+**DROP**
+Para deletar ou dropar uma tabela presente no HBase, primeiro é necessário desabilita-lá com o comando disable.
+<u>Sintaxe:</u>
+drop '<nome da tabela>'
+<u>Comando:</u>
+drop 'funcionario'
+
+**DROP_ALL**
+Esse comando excluirá todas as tabelas que estiverem com o nome dentro da regra da expressão regular.
+Todas as tabelas que serão excluídas, precisam estar na situação de desabilitadas, portanto ter passado pelo comando disable_all.
+<u>Sintaxe:</u>
+drop_all '<expressão regular>'
+<u>Comando:</u>
+drop_all 'func.*'
+
+**IS_ENABLED**
+Esse comando só verificará se a tabela está habilitada ou não. Caso esteja desabilitada é necessário acionar o outro comando enable.
+<u>Sintaxe:</u>
+is_enabled '<nome da tabela>'
+<u>Comando:</u>
+is_enabled 'funcionario
+
+**ALTER** (Acrescentando column family e limitando versões da coluna)
+Esse comando alterará a definição (schema) da família de colunas (column family) de uma tabela especificada.
+Alterar uma única ou múltiplas column family.
+Deletar column family
+Diversas operações são permitidas utilizando atributos específicos de definição de uma tabela.
+Sintaxe:
+
+alter '<nome da tabela>', NAME=><column familyname>, VERSIONS => 5
+
+Exemplo comando abaixo para limitar armazenamento até 5 versões da column family
+
+alter 'funcionario', NAME => 'hobby', VERSIONS => 5
+alter 'funcionario', 'delete'=>'hobby' (Para deletar)
+
+**ALTER_STATUS**
+Com esse comando é possível acompanhar com o status das alterações realizada de uma tabela para todos nós RegionServer.
+<u>Sintaxe:</u>
+alter_status '<nome da tabela>'
+<u>Comando:</u>
+alter_status 'funcionario'
+
+<br>
+
+Os comandos abaixo são utilizados para operar os dados no HBase.
+
+- **put** – Insere/Atualiza um valor em uma determinada célula de uma específica linha de uma
+  tabela.
+- **get** – Consulta todo o conteúdo de uma linha ou célula em uma tabela.
+- **delete** – Exclui um valor de uma célula em uma tabela.
+- **deleteall** – Exclui todas as células de uma linha em específico.
+- **scan** – Varre toda a tabela retornando as dados contidos.
+- **count** – Conta e retorna o número de linhas em uma tabela.
+- **truncate** – Desabilita, exclui e recria uma tabela em específico.
+
+*<u>IMPORTANTE</u>: Todas as operações de CRUD lista acima estão disponíveis via API Java de*
+*utilização sob o pacote org.apache.hadoop.hbase.cliente com os objetos Htable Put e Get.*
+
+<br>
+
+**PUT**
+Comando para inserir um determinado valor em uma célular na coluna ou linha.
+Também utilizado para atualizar um determinado valor de uma célula para um determinado
+rowKey e ColumnFamility:colname já existente.
+<u>Sintaxe:</u>
+put '<nome da tabela>', '<rowkey>', '<columnfamily:colname>', '<valor>'
+<u>Comando:</u>
+
+```sql
+put 'funcionario', '1', 'pessoais:nome', 'Maria'
+put 'funcionario', '1', 'pessoais:cidade', 'São Paulo'
+put 'funcionario', '1', 'pessoais:cidade', 'Belo Horizonte'
+put 'funcionario', '2', 'profissionais:empresa', 'Everis'
+scan 'funcionario', {VERSIONS => 3}
+```
+
+**GET**
+Comando retorna um determinado valor em uma célula na coluna ou linha inteira do rowKey.
+<u>Sintaxe:</u>
+get '<nome da tabela>', '<rowkey>', [parâmetros opcionais]
+<u>Comando:</u>
+get 'funcionario', '1'
+get 'funcionario', '1', {COLUMN => 'pessoais:cidade'}
+
+Consultar todas as versões de uma column para um rowkey específico get 'funcionario', '1' , {COLUMN => 'pessoais:cidade', VERSIONS=> 3}
+
+**COUNT**
+Comando recupera a quantidade de linhas de uma determinada tabela.
+O Intervelo de contagem de linhas pode ser especificado de forma opcional.
+A contagem de linhas é exibida a cada 1000 linhas.
+<u>Sintaxe:</u>
+count '<nome da tabela>', CACHE => 1000
+<u>Comando:</u>
+count 'funcionario', CACHE=> 1000
+
+**DELETE**
+Comando remove um determinado valor em uma célula na coluna informadas, também possível remover todas as células de uma rowKey especificada.
+<u>Sintaxe:</u>
+delete '<nome da tabela>', '<rowkey>', '<column name>'
+delete <'nome da tabela>', '<rowkey>', '<column name>', '<timestamp'>
+deleteall '<nome da tabela>','<rowkey>'
+<u>Comando:</u>
+delete 'funcionario', '1', 'pessoais:cidade'
+delete 'funcionario', '1', 'pessoais:cidade', 129019101
+deleteall 'funcionario', '1'
+
+**SCAN**
+Comando remove um determinado valor em uma célula na coluna informadas, também possível remover todas as células de uma rowKey especificada.
+<u>Sintaxe:</u>
+scan '<nome da tabela>', '[parâmetros opcionais]'
+<u>Comando:</u>
+Exibe as ultimas versões de cada rowKey e respectivas colunas scan 'funcionario'
+Exibe todas as últimas 10 versões de cada rowKey e respectivas colunas scan 'funcionario', {RAW=>true, version=>10}
+
+**TRUNCATE**
+Comando remove todas as linhas e colunas presentes na tabela.
+Internamente o comando realizada a desabilitação da tabela, drop a tabela se ainda está presente, e recria.
+<u>Sintaxe:</u>
+truncate '<nome da tabela>'
+<u>Comando:</u>
+truncate 'funcionario'
+
+#### TTL – Registro temporário
+
+##### Colunas com propriedade TTL – Time To Live
+
+É um mecanismo que permite configurar de forma opcional o tempo de permanência de registros em uma tabela ou especificamente de uma coluna.
+<u>Configurável em segundos</u>, quantos tempo o registro ficará disponível para consulta.
+<u>Os registros são deletados</u> após esse período.
+Esse comportamento é feito para todas as versões de cada linha e também válido para quando o HBase é utilizado como intermediários no fluxo de dados ou seja para dados de transição.
+A deleção do registro pode ocorrer também como versionamento da linha, como se fosse uma deleção lógica mas os dados vão continuar nas versões anteriores.
+
+##### Exemplo TTL – Time To Live
+
+Criar uma tabela com registros que ficam 20 segundos na base.
+
+```sql
+create 'ttl_exemplo', { 'NAME' => 'cf', 'TTL' => 20}
+put 'ttl_exemplo', 'linha123', 'cf:desc', 'TTL Exemplo'
+get 'ttl_exemplo', 'linha123', 'cf:desc'
+```
+
+
+Aguarde 20 segundos e consulte a linha novamente.
+
+```sql
+get 'ttl_exemplo', 'linha123', 'cf:desc'
+```
+
+#### Comandos do Cassandra
+
+##### Criação do keyspace (schema, namespace)
+
+```sql
+CREATE KEYSPACE empresa
+WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+```
+
+**Criação de tabela**
+
+```sql
+create table empresa.funcionario
+(
+	empregadoid int primary key,
+	empregadonome text,
+	empregadocargo text,
+);
+```
+
+**Criação de índice secundário para consulta**
+
+```sql
+CREATE INDEX rempresacargo ON empresa.funcionario (empregadocargo);
+```
+
+##### Comandos na Prática
+
+```
+#Acessando
+$ hbase shell
+
+#Listando tabelas
+list
+
+#Caso esteja no safe mode. Executar no shell. Ele entra no safe mode quando os serviços do hadoop não foram parados antes de desligar a VM.
+$ sudo -u hdfs hadoop dfsadmin -safemode leave
+
+#Verificar o que está corrompido no HDFS. Check Yarn. Executar no shell
+$ sudo -u hdfs hadoop fsck / | egrep -v '^\.+$' | grep -v eplica
+
+#Caso exiba algum arquivo corrompido será necessário apagar ou recuperar.
+$ sudo -u hdfs hdfs dfs -rm <caminho do arquivo>
+
+#Criando uma tabela
+create 'funcionario', 'pessoais', 'profissionais'
+
+#Inserindo dados na tabela
+put 'funcionario', '1', 'pessoais:nome', 'Maria'
+
+#Visualizando os registros
+scan 'funcionario'
+
+#Inserindo dados na tabela II
+put 'funcionario', '1', 'pessoais:cidade', 'Sao Paulo'
+
+#Inserindo dados na tabela III
+put 'funcionario', '2', 'profssionais:empresa', 'Everis'
+
+#Alterando dados na tabela
+##Desabilitando tabela
+disable 'funcionario'
+
+##Alterando tabela
+alter 'funcionario', NAME=>'hobby', VERSIONS=>5
+
+##Habilitando tabela
+enable 'funcionario'
+
+#Inserindo dados na tabela IV
+put 'funcionario', '1', 'hobby:nome', 'Ler livros'
+put 'funcionario', '1', 'hobby:nome', 'Pescar'
+
+#Visualizando versionamento da tabela
+scan 'funcionario', {VERSIONS=>3}
+
+#Contar as rows keys
+count 'funcionario'
+
+#Deletar registros da tabela. Ele deleta a última versão do registro
+delete 'funcionario', '1', 'hobby:nome'
+
+#Criando Time To Live. O Exemplo abaixo o registro ficará disponível por 20 segundos
+create 'ttl_exemplo', {'NAME'=>'cf', 'TTL' => 20}
+
+#Inserindo registro de exemplo para o Time To Live
+put 'ttl_exemplo', 'linha123', 'cf:desc', 'TTL Exemplo'
+```
+
+**Cassandra**
+
+```
+#Acessando
+cqlsh
+
+#Ajuda sobre os comandos
+help
+help alter #Exemplo
+
+#Criação do keyspace (schema, namespace)
+CREATE KEYSPACE empresa
+WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+
+#Criação de tabela
+create table empresa.funcionario
+  (
+    empregadoid int primary key,
+    empregadonome text,
+    empregadocargo text,
+  );
+    
+#Criação de índice secundário para consulta
+CREATE INDEX rempresacargo ON empresa.funcionario (empregadocargo);
+
+#Inserindo dados no keyspace
+INSERT INTO
+"empresa"."funcionario" (empregadoid, empregadonome, empregadocargo)
+VALUES (1, 'Felipe', 'Engenheiro de Dados'); 
+
+#Visualizando keyspace
+SELECT * FROM "empresa"."funcionario";
+```
+
+#### Atividades
+
+1. Criar uma tabela que representa lista de Cidades e que permite armazenar até 5 versões na Column Famility com os seguintes campos:
+
+```
+Código da cidade como rowKey
+Column Family=info
+        Nome da Cidade
+        Data de Fundação
+        
+Column Family=responsaveis
+        Nome Prefeito
+        Data de Posse do Prefeito
+        Nome Vice prefeito
+Column Family=estatisticas
+        Data da última Eleição
+        Quantidade de moradores
+        Quantidade de eleitores
+        Ano de fundação
+
+#Criando Tabela
+create 'cidade', 'info', 'responsaveis', 'estatisticas'
+
+#Versionamento
+alter 'cidade', NAME='info', VERSIONS =>5
+alter 'cidade', NAME='responsaveis', VERSIONS =>5
+alter 'cidade', NAME='estatisticas', VERSIONS =>5
+```
+
+2. Inserir 10 cidades na tabela criada de cidades.
+
+```
+#Exemplo utilizado
+put 'cidade', '10', 'info:N_Cid', 'Alagoas'
+put 'cidade', '10', 'info:Dt_fund', '2000-10-10'
+put 'cidade', '10', 'responsaveis:N_Pref', 'Joao'
+put 'cidade', '10', 'responsaveis:Dt_Pos', '2000-10-10'
+put 'cidade', '10', 'responsaveis:N_Vice', 'Pedro'
+put 'cidade', '10', 'estatisticas:Dt_ultel', '2000-10-10'
+put 'cidade', '10', 'estatisticas:Qt_Mora', '993939'
+put 'cidade', '10', 'estatisticas:Qt_el', '949351'
+put 'cidade', '10', 'estatisticas:Ano_fund', '2000-10-10'
+```
+
+3. Realizar uma contagem de linhas na tabela.
+
+```
+count 'cidade'
+#Resultado:
+#hbase(main):127:0> count 'cidade'
+#10 row(s) in 0.0200 seconds
+#
+#=> 10
+```
+
+4. Consultar só o código e nome da cidade.
+
+```
+get 'cidade', '1', 'info:N_Cid'
+#Resultado
+#hbase(main):133:0> get 'cidade', '1', 'info:N_Cid'
+#COLUMN                         CELL                                                                                   
+# info:N_Cid                    timestamp=1611793163883, value=Florianopolis
+```
+
+5. Escolha uma cidade, consulte os dados dessa cidade em específico antes do próximo passo.
+
+```
+get 'cidade', '1'
+#COLUMN                         CELL                                                                                   
+# estatisticas:Ano_fund         timestamp=1611793471968, value=2000-10-10                                              
+# estatisticas:Dt_ultel         timestamp=1611793469699, value=2000-10-10                                              
+# estatisticas:Qt_Mora          timestamp=1611793469730, value=993939                                                  
+# estatisticas:Qt_el            timestamp=1611793469750, value=949351                                                  
+# info:Dt_fund                  timestamp=1611793170666, value=2000-10-10                                              
+# info:N_Cid                    timestamp=1611793163883, value=Florianopolis                                           
+# responsaveis:Dt_Pos           timestamp=1611793182596, value=2000-10-10                                              
+# responsaveis:N_Pref           timestamp=1611793176437, value=Joao                                                    
+# responsaveis:N_Vice           timestamp=1611793188547, value=Pedro                                                   
+#9 row(s) in 0.0070 seconds
+```
+
+6. Altere para a cidade escolhida os dados de Prefeito, Vice Prefeito e nova data de Posse.
+
+```
+put 'cidade', '1', 'responsaveis:N_Pref', 'Cezar'
+put 'cidade', '1', 'responsaveis:N_Vice', 'Augusto'
+```
+
+7. Consulte os dados da cidade alterada.
+
+```
+get 'cidade', '1'
+#COLUMN                         CELL                                                                                   
+# estatisticas:Ano_fund         timestamp=1611793471968, value=2000-10-10                                              
+# estatisticas:Dt_ultel         timestamp=1611793469699, value=2000-10-10                                              
+# estatisticas:Qt_Mora          timestamp=1611793469730, value=993939                                                  
+# estatisticas:Qt_el            timestamp=1611793469750, value=949351                                                  
+# info:Dt_fund                  timestamp=1611793170666, value=2000-10-10                                              
+# info:N_Cid                    timestamp=1611793163883, value=Florianopolis                                           
+# responsaveis:Dt_Pos           timestamp=1611793182596, value=2000-10-10                                              
+# responsaveis:N_Pref           timestamp=1611795251657, value=Cezar                                                   
+# responsaveis:N_Vice           timestamp=1611795236842, value=Augusto                                                 
+#9 row(s) in 0.0140 seconds
+```
+
+8. Consulte todas as versões dos dados da cidade alterada.
+
+```
+get 'cidade', '1', {COLUMNS=>['responsaveis'],VERSIONS=>5}
+#hbase(main):203:0> get 'cidade', '1', {COLUMNS=>['responsaveis'],VERSIONS=>5}
+#COLUMN                        CELL                                                                                
+# responsaveis:Dt_Pos          timestamp=1611793182596, value=2000-10-10
+# responsaveis:N_Pref           timestamp=1611795251657, value=Cezar                                                   
+# responsaveis:N_Vice           timestamp=1611795236842, value=Augusto                                           
+# responsaveis:N_Pref          timestamp=1611796161455, value=Davi                                                 
+# responsaveis:N_Vice          timestamp=1611795236842, value=Augusto                                              
+#5 row(s) in 0.0080 seconds
+```
+
+9. Exclua as três cidades com menor quantidade de habitantes e quantidade de eleitores.
+
+Podemos resolver esse exercício de diferentes maneiras. A maneira mais simples é olhar a tabela, encontrar as 3 cidades com as menores populações, coletar suas respectivas row-keys e exclui-las da tabela. De outro modo, poderíamos usar o HIVE ou recompilar o HBase aplicando os patches que incluem funções de agregação. Achei mais conveniente usar shell script para resolver o problema da ordenação e recuperação das row-keys (ele poderá ser reutilizado nas questões seguintes).
+
+```
+#!/usr/bin/bash
+#$1 - numero de registros para retornar
+#$2 - arquivo de saída
+#$3 - tipo de sort (r para reverso)
+tail -n +7 |
+head -n -2 |
+cut -f 2,5 -d' ' |
+cut -f 1-2 -d'=' --output-delimiter=' '|
+sort -$3nk3 |
+head -n $1 |
+cut -f 1 -d ' ' > $2
+```
+
+O script acima recebe o resultado de uma consulta do HBase, ordena (em ordem crescente ou decrescente) e salva as N row-keys em um arquivo. Ele recebe 3 argumentos posicionais:
+
+- o número de row-keys que serão exportadas.
+- o nome do arquivo de saída.
+- (opcional) tipo de ordenação (crescente ou decrescente). [r pra decrescente]
+
+```
+echo "scan 'cidades', {COLUMNS=>'estatisticas:populacao'}" \
+| hbase shell | ./sort_query.sh 3 row-keys.txt
+```
+
+Ao rodar o comando acima, teremos um arquivo row-keys.txt, contendo as row-keys das 3 cidades com as menores populações. Agora precisamos excluir os registros baseados nas row-keys salvas nesse arquivo. Para isso, vamos usar outro shell script para executar os comandos em batch.
+
+```
+#!/usr/bin/bash
+#$1 arquivo com as row-keys
+#$2 comando hbase
+while read -r line;
+do 
+   echo "$2 'cidades', '$line' $3"; 
+done < $1 | hbase shell
+```
+
+Executando os comandos em batch:
+
+```
+./batch_process.sh newkeys.txt deleteall
+```
+
+O script recebe dois argumentos posicionais:
+
+- o nome do arquivo contendo as row-keys.
+- o comando HBase que será executado.
 
 
 
+10. Liste todas as cidades novamente.
+
+```
+scan 'cidade'
+```
+
+11. Adicione na ColumnFamily “estatísticas”, duas novas colunas de “quantidade de partidos políticos” e “Valor em Reais à partidos” para as 2 cidades mais populosas cadastradas.
+
+```
+put 'cidade', '1', 'responsaveis:Qt_Part', '39'
+put 'cidade', '1', 'responsaveis:Valor_Part', '34556'
+```
+
+12. Liste novamente todas as cidades.
+
+```
+scan 'cidade'
+```
+
+#### **Cenários de Utilização**
+
+**Cenário 1**
+
+> Utilizado como banco de dados para aplicações Web e aplicativos móveis. Por meio de integrações REST é possível fazer essa integração com o HBase.
+
+**Cenário 2** 
+
+> Utilizado como repositório para guardar uma cópia e/ou replicador dos dados vindo de
+> serviços de eventos antes da consolidação final.
+
+**Cenário 3**
+
+> Enriquecimento dos dados finais com dados armazenados no HBase. Por exemplo: lookups.
+> Como há o versionamento padrão do Hbase, é possível ter o rastro das informações alteradas
+> para cada rowKey.
 
 
+
+#### Operações massivas
+
+O que é Build Insert?
+
+Nos banco de dados essa é a uma operação que permite fazer a carga massiva de dados. 
+
+Normalmente isso ocorre por acionamento de um programa utilitário do banco de dados. 
+
+No HBase é possível realizar essa carga por esses meios mais comuns:
+
+- Classe Utilitária do HBase [org.apache.hadoop.hbase.mapreduce.ImportTsv].
+- Intermediários em script com Sqoop, aplicações em Spark, Apache Phoenix, e etc, que
+  implementam indiretamente a Hbase API.
+- External Table do Hive utilizando StorageHandler para gravar os dados no
+  Hbase/Cassandra.
+- API
+
+##### Exemplo de Builk Insert
+
+1. Confirmar que o arquivo employees.csv esteja em /home/everis/arquivos/employee.csv
+2. Criar a tabela employees no Hbase com a column Familty: employee_data
+3. Criar uma pasta no HDFS pelo shell do Linux
+hadoop fs -mkdir /test
+Copia os arquivos exportados para o HDFS pelo shell do Linux
+hadoop fs -copyFromLocal /home/everis/arquivos/employees.csv /test/employees.csv
+4. Executar a importação no shell do Linux
+hbase org.apache.hadoop.hbase.mapreduce.ImportTsv -Dimporttsv.separator=';' -
+Dimporttsv.columns=HBASE_ROW_KEY,employee_data:birth_date,employee_data:first_name,e
+mployee_data:last_name,employee_data:gender,employee_data:hire_date employees
+/test/employees.csv
+
+##### Exercício
+
+1. Criar a tabela salaries no HBASE com o schema abaixo.
+2. Efetuar a carga de dados via ImportTsv utilizando o arquivo salaries.csv
+3. Verificar a quantidade na tabela carregada versus a quantidade de linhas do arquivo.
+4. Crie a tabela salaries_concatenado agora para o arquivo salaries_com_row_key.csv, observe que esse  arquivo tem uma coluna a mais que é a row_key concatenada.
+5. Porque o primeiro arquivos carregou menos registros?
+
+![](/.img/Cassandra.png)
+
+#### Integrações NoSQL com ambiente Hadoop
+
+É possível realizar essa integração utilizando a implementação da interface StorageHandler com a classe org.apache.hadoop.hive.hbase.HBaseStorageHandler que o Hbase disponibiliza.
+
+No Hive a interface StorageHandler permite que outras aplicações externas ao Hive (i.e Cassandra, Azure Table, JDBC (MySQL), MongoDB, ElasticSearch, e etc) implementem e disponibilizem operações dessas estruturas e dados armazenados ao Apache Hive.
+
+A idéia é que o Hive tenha visibilidade do metadados quando a tabela é criado no Hive mas os dados e o controle de armazenamento esteja externo.
+
+É uma evolução do conceito de tabela gerenciada (managed) e externa (external) do Hive.
+
+Saber mais sobre StorageHandlers, [saiba mais](https://cwiki.apache.org/confluence/display/Hive/StorageHandlers).
+
+Para saber mais detalhes da Integração do Hive e HBase e quais operações estão suportadas,
+[saiba mais](https://cwiki.apache.org/confluence/display/Hive/HBaseIntegration).
+
+#### Exemplo Integração NoSQL com Hadoop
+
+Utilizando a tabela employee utilizada nos exercícios anteriores, vamos dar visibilidade ao Hive dessa estrutura do HBase
+
+1. Vamos criar um novo schema no Hive.
+
+```sql
+CREATE DATABASE tabelas_hbases;
+```
+
+2. Criar a tabela employee no Hive.
+
+```sql
+CREATE EXTERNAL TABLE tabelas_hbases.employees (
+emp_no INT,
+birth_date string,
+first_name string,
+last_name string,
+gender string,
+hire_date string)
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES("hbase.columns.mapping"=":key, employee_data:birth_date,
+employee_data:first_name, employee_data:last_name,employee_data:gender,employee_data:hire_date")
+TBLPROPERTIES("hbase.table.name"="employees", "hbase.mapred.output.outputtable"="employees");
+```
+
+**Exercício**
+
+1. Criar a tabela externa salaries no Hive que representa a mesma tabela
+que foi carregada em exercícios anteriores no Hbase.
+2. Consultar os empregados com o maior salário em cada ano.
+3. Consultar o quanto foi gasto em salários por ano
+
+### Comandos Gerais
+
+```
+#Acionar o Hbase
+$ hbse shell
+
+#Visualizar detalhes sobre o sistemas
+status #Variações: status'simple' | status 'summary' | status 'detailed'
+
+#Exibir versão do HBase
+version
+
+#Exibir comandos que se referenciam a uma tabela
+table_help
+
+##Comandos utilizandos para operar as tabelas no HBase
+create # Cria uma tabela.
+list # Lista todas as tabelas no HBase independente do namespace.
+disable # Desabilita uma tabela.
+is_disabled # Checa se uma tabela está desabilitada.
+enable # Habilita uma tabela.
+is_enabled # Checa se uma tabela está habilitada.
+describe # Exibe informações de definição de uma tabela.
+alter # Realiza alterações em uma tabela.
+exists # Verifica se uma tabela existe.
+drop # Exclui um tabela do HBase.
+drop_all # Exclue todas as que se aplicam a um padrão de nomes via regra de Regex.
+
+#Criar uma namespace no HBase
+create_namespace '<namespace>'{PROPRIEDADES}
+
+#Criar tabela no HBase
+create '[<namespace>]:<nome tabela>','<nome da column family>' {PROPRIEDADES}
+
+#Visualizar todas as tabelas presenntes e criadas no HBase
+list
+
+#Exibe informações sobre as column families presente na tabela e outras informações HBase
+describe
+
+#Desabilita a tabela para delete ou exclusão no HBase
+disable '<nome da tabela>'
+
+#Desabilitar as tabelas que atendem dentro do critério Regex
+disable_all '<prefixo da tabela>.*'
+
+#Deletar tabela
+drop '<nome da tabela>'
+
+#Deletar todas as tabelas dentro do Regex
+drop_all'<expressão regular>'
+
+#Verificar se a tabela está habilitada ou não
+is_enabled'<nome da tabela>'
+
+#Alterar propriedades de tabelas ou acrescentar column family
+alter '<nome da tabela>', NAME=><column familyname>, VERSIONS => 5
+
+#Exibe o status das alterações realizadas de uma tabela
+alter_status '<nome da tabela>'
+
+##Comandos de manipulação
+put # Insere/Atualiza um valor em uma determinada célula de uma específica linha de uma tabela.
+get # Consulta o conteúdo de uma linha ou célula em uma tabela
+# delete # Exclui um valor de uma célula em uma tabela.
+deleteall # Exclui todas as células de uma linha em específico.
+scan # Varre toda a tabela retornando as dados contidos.
+count # Conta e retorna o número de linhas em uma tabela.
+truncate # Desabilita, exclui e recria uma tabela em específico.
+```
+
+#### Próximos Passos
+
+Utilizar o **Apache Spark** para processamento distribuído de informações vindo de eventos (Kafka) ou gravando em tópicos com as informações de dados no **Hbase/Cassandra**.
+Resumindo: olhar para Arquitetura de Eventos no big data.
+
+Aplicação **Apache Phoenix** que habilita capacidades de execução consultas SQL, analítico e OLTP ao HBase.
+As duas distribuições mais conhecidas do ecossistema do Hadoop on-premisse Cloudera e Horton suportam e em algumas instalações podem permitir a utilização ou já utilizam.
+https://phoenix.apache.org/ e https://phoenix.apache.org/who_is_using.html
+
+Caso queira aprofundar o conhecimento em NoSQL, olhar outros produtos como Apache Cassandra (versão da DATASTAX) https://www.datastax.com/ que tem versão do Cassandra as a Service.
+
+**Referências**
+
+- http://hbase.apache.org/book.html
+- Secondary Indexing on Hbase
+- https://blog.cloudera.com/how-to-use-the-apache-hbase-rest-interface-part-1/
+- https://blog.cloudera.com/offset-management-for-apache-kafka-with-apache-spark-streaming/
+- https://asesoftware.com/site/en/como-se-aplica-el-teorema-cap-y-el-reto-de-la-escalabilidad-en-las-rdbms-y-nosql/
+- https://blog.caelum.com.br/nosql-do-teorema-cap-para-paccl/amp/
+- https://cassandra.apache.org/doc/3.11.3/
 
 
 
@@ -2696,10 +3663,6 @@ www.httpstatuses.com
 
 Abrir o arquivo [Aceleracao Everis - Postman.postman_collection.json](/live03-02-2021/Aceleracao%20Everis%20-%20Postman.postman_collection.json)
 
-
-
-
-
 <br>
 
 <br>
@@ -2712,9 +3675,34 @@ Abrir o arquivo [Aceleracao Everis - Postman.postman_collection.json](/live03-02
 
 *ACELERAÇÃO GLOBAL EVERIS*
 
-:calendar: 04/02/2021		:timer_clock: 19:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
+:calendar: 04/02/2021		:timer_clock: 20:00h		:hourglass: 2 horas	[:arrow_up:](#aceleração-global-dev-everis-4-rocket)
 
 <br>
 
 *Notas da live*
+
+- Profissional Sênior
+  - Compartilhar informações
+  - Relacionamento e Gestão de Pessoas
+  - Busca por Conhecimento
+  - Saber buscar a resposta
+  - Aprender rápido
+  - Ambiente Remoto até Junho no mínimo
+  - Escritório Central em São Paulo
+
+Metodologia Ágil: As metodologias Kanban são contínuas e mais fluidas, enquanto o Scrum é baseado em sprints de trabalho curtos e estruturados
+
+Ferramentas mais utilizadas no momento: Cloud Azure, Cloud Google, Cloud Amazon. Preferencialmente da Microsoft.
+
+Programa de Aceleração
+
+​	Transição de carreira
+
+Entrevistas podem ocorrer a partir da próxima semana 07/02
+
+Trabalho CLT
+
+
+
+
 

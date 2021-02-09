@@ -9,7 +9,7 @@ Anotações das aulas. :pencil2::books:
 - [x] [Orquestrando ambientes de big data distribuídos com Zookeeper, Yarn e Sqoop](#orquestrando-ambientes-de-big-data-distribuídos-com-zookeeper-yarn-e-sqoop)
 - [x] [Como realizar consultas de maneira simples no ambiente complexo de Big Data com HIVE e Impala](#como-realizar-consultas-de-maneira-simples-no-ambiente-complexo-de-bigdata-com-hive-e-impala)
 - [x] [Explorando o poder do NoSQL com Cassandra e Hbase](#explorando-o-poder-do-nosql-com-cassandra-e-hbase)
-- [ ] [Intensivo de Python - O mínimo que você precisa saber](#intensivo-de-python---o-mínimo-que-você-precisa-saber)
+- [x] [Intensivo de Python - O mínimo que você precisa saber](#intensivo-de-python---o-mínimo-que-você-precisa-saber)
 - [ ] [Trabalhando com serviços de mensageria real time com Python e Kafka na prática](#trabalhando-com-serviços-de-mensageria-real-time-com-python-e-kafka-na-prática)
 - [ ] [Processando grandes conjuntos de dados de forma paralela e distribuída com Spark](#processando-grandes-conjuntos-de-dados-de-forma-paralela-e-distribuída-com-spark)
 - [ ] [Criando pipelines de dados eficientes - Parte 1](#criando-pipelines-de-dados-eficientes---parte-1)
@@ -1248,9 +1248,9 @@ Daddos separados em blocos; Replicado em 3; O Namenode armazena os metadados.
 
 *Exemplo*
 
-![](/.img/exemplo1hdfs.png)
+![](.img/exemplo1hdfs.png)
 
-![](/.img/exemplo2hdfs.png)
+![](.img/exemplo2hdfs.png)
 
 <br>
 
@@ -1395,7 +1395,7 @@ hdfs fsck
 
 *Execução de aplicação*
 
-![](/.img/exemplo1Yarn.png)
+![](.img/exemplo1Yarn.png)
 
 
 
@@ -1574,9 +1574,9 @@ SQL Server;
 
 *Exemplo*
 
-![](/.img/sqoop1.png)
+![](.img/sqoop1.png)
 
-![](/.img/sqoop2.png)
+![](.img/sqoop2.png)
 
 ```shell
 sqoop import \
@@ -2585,7 +2585,7 @@ Uma grande diferença para o Hbase, é que o <u>Cassandra suporta tabela secund�
 
 A característica principal do Cassandra é armazenar em múltiplos nós sem nenhum ponto de falha. Conexão entre os nós é realizada de ponto a ponta, utilizando um protocolo chamado **Gossip**.
 
-![](/.img/Cassandra1.png)
+![](.img/Cassandra1.png)
 
 ##### Componentes do Cassandra
 
@@ -3241,7 +3241,7 @@ mployee_data:last_name,employee_data:gender,employee_data:hire_date employees
 4. Crie a tabela salaries_concatenado agora para o arquivo salaries_com_row_key.csv, observe que esse  arquivo tem uma coluna a mais que é a row_key concatenada.
 5. Porque o primeiro arquivos carregou menos registros?
 
-![](/.img/Cassandra.png)
+![](.img/Cassandra.png)
 
 #### Integrações NoSQL com ambiente Hadoop
 
@@ -3412,9 +3412,322 @@ Caso queira aprofundar o conhecimento em NoSQL, olhar outros produtos como Apach
 - <a href="https://colab.research.google.com/" target="_blank">Google Colab</a>
 - Pandas
 
+##### Hello World
+
+```python
+def helloWorld():
+  name = 'Aceleração Gloval #4 - Everis'
+  print( name )
+```
+
+##### if else
+
+```python
+def calcBalada( age ):
+  
+  if( age >= 18 ):
+    print('Beleza, pode entrar na balada');
+  else:
+    print('Vaza, volta aqui mais tarde !');
+
+calcBalada( 28 )
+```
+
+##### for
+
+```python
+def forExample():
+  
+  # Definindo o array
+  names = ['Huguinho', 'John', 'John 2'];
+
+  for name in names:
+    print( ' Aceleração global - ' + name )
+
+# Invocando a função
+forExample()
+```
+
+##### Objetos
+
+```python
+def mapExample():
+
+  person1 = {
+      'name' : 'Huguinho',
+      'title' : 'Expert IT Techonology'
+  };
+
+  for key in person1:
+    print('key', key, ' | value', person1[ key ] )
+
+mapExample()
+```
+
+##### Lista de objetos
+
+```python
+def forWithMap():
+
+  person1 = {
+      'name' : 'Huguinho',
+      'title' : 'Expert IT Techonology'
+  };
+
+  person2 = {
+      'name' : 'User 2',
+      'title' : 'Student from everis Aceleration'
+  };
+
+  lista = [];
+  lista.append( person1 );
+  lista.append( person2 );
+
+  print('tamanho do array', len( lista ) );
+
+  for obj in lista:
+    print('Nome: ', obj['name'], ' | title: ', obj['title'] );
+
+forWithMap();
+```
+
+##### Pandas.ipynb
+
+*Serve para fazer ETL*
+
+```python
+import pandas as pd
+def createDataframe():
+  map = {
+      "name" : ["Huguinho", "Student 1", "Student 2"],
+      "age" : [ 28, 18, 32 ],
+      "location" : ["Santos", "São Paulo", "Rio de Janeiro"]
+  }
+  df = pd.DataFrame( map );
+  print( df );
+
+createDataframe()
+```
+
+DataFrame
+
+```python
+def addColumnDataframe():
+
+  map = {
+      "name" : ["Huguinho", "Student 1", "Student 2"],
+      "age" : [ 28, 18, 32 ],
+      "location" : ["Santos", "São Paulo", "Rio de Janeiro"]
+  }
+
+  df = pd.DataFrame( map );
+
+  # adicionando uma nova coluna
+  address = ['Rua de teste 1', 'Rua de teste 2', 'Rua de teste 3'];
+
+  df['address'] = address;
+
+  print( df )
+
+addColumnDataframe()
+```
+
+##### Removendo data
+
+```python
+def removeColumnDataframe():
+
+  map = {
+      "name" : ["Huguinho", "Student 1", "Student 2"],
+      "age" : [ 28, 18, 32 ],
+      "location" : ["Santos", "São Paulo", "Rio de Janeiro"]
+  }
+  df = pd.DataFrame( map );
+
+  # Removendo a linha pelo índice
+  df = df.drop(1)
+  print( df )
+  print("---------------------------")
+
+    # Removendo a coluna
+  df = df.drop( columns=["age"] );
+  print ( df );
+
+removeColumnDataframe()
+```
+
+##### Filtro de dados
+
+```python
+def filterDataframe():
+
+  map = {
+      "name" : ["Huguinho", "Student 1", "Student 2", "Student 3", "Student 4"],
+      "age" : [ 28, 18, 32, 17, 14 ],
+      "location" : ["Santos", "São Paulo", "Rio de Janeiro", "São Paulo", "São Paulo"]
+  }
+
+  df = pd.DataFrame( map );
+
+  # criando o filtro
+  filter = df["age"] >= 18;
+
+  # Filtrando a lista
+  filteredList = df[ filter ];
+
+  print ( df );
+  print("----------------------");
+  print( filteredList )
+
+filterDataframe()
+```
+
+*DataSet* = Conjunto de Dados
+
+*DataFrame* = DataSet que o Pandas criou
+
+##### Manipulando Strings
+
+```python
+def stringDataframe():
+
+  map = {
+      "name" : ["Huguinho", "Student 1", "Student 2", "Student 3", "Student 4"],
+      "age" : [ 28, 18, 32, 17, 14 ],
+      "location" : ["santos", "são Paulo", "rio de Janeiro", "são Paulo", "São Paulo"]
+  }
+
+  df = pd.DataFrame( map );
 
 
+  print("original dataframe")
+  print ( df );
+  print("-------------------------------------------");
 
+  # maiúscula
+  print()
+  print("Upper case")
+  print( df["location"].str.upper() )
+  print("--------------------------------------------");
+
+  print()
+  print("Upper in dataframe")
+  df["location"] = df["location"].str.upper()
+  print( df );
+  print("------------------------------------------");
+
+  # Somente a primeira maiuscula
+  print()
+  print("Capitalize")
+  df["location"] = df["location"].str.capitalize()
+  print( df );
+  print("------------------------------------------");
+
+  # Somente a primeira de cada palavra
+  print()
+  print("Title")
+  df["location"] = df["location"].str.title()
+  print( df );
+  print("------------------------------------------");
+
+stringDataframe()
+```
+
+##### Renomear
+
+```python
+def renameDataframe():
+
+  map = {
+      "name" : ["Huguinho", "Student 1", "Student 2", "Student 3", "Student 4"],
+      "age" : [ 28, 18, 32, 17, 14 ],
+      "location" : ["Santos", "São Paulo", "Rio de Janeiro", "São Paulo", "São Paulo"]
+  }
+
+  df = pd.DataFrame( map );
+
+  # renomeando
+  df = df.rename(columns={"age": "idade", "location": "localizacao"})
+
+  print ( df );
+  print("----------------------");
+
+renameDataframe()
+```
+
+##### Salvando como Json
+
+```python
+def jsonDataframe():
+
+  map = {
+      "name" : ["Huguinho", "Student 1", "Student 2", "Student 3", "Student 4"],
+      "age" : [ 28, 18, 32, 17, 14 ]
+  }
+
+  df = pd.DataFrame( map );
+
+  # json
+  json = df.to_json(orient="records")
+
+  print ( df );
+  print("----------------------");
+  print( json )
+
+jsonDataframe()
+```
+
+##### Lendo um arquivo csv
+
+```python
+def readCsv():
+  url = "https://raw.githubusercontent.com/huguinho-alves/python_aceleracao_everys/main/arquivo.csv"
+  df = pd.read_csv( url )
+    # separado por ;
+    # df = pd.read_csv( url, delimiter=";" )
+  print( df )
+
+readCsv()
+```
+
+##### Criando um Rest Service.ipynb
+
+```python
+# Instalando
+
+!pip install flask flask-ngrok
+```
+
+##### Criando um server
+
+```python
+# Criando o server
+import json
+
+
+from flask_ngrok import run_with_ngrok
+from flask import Flask, request, make_response
+
+
+app = Flask(__name__)
+
+run_with_ngrok(app)   #starts ngrok when the app is run
+@app.route("/", methods = ['GET', 'POST', 'DELETE'])
+def home():
+
+    pessoas = [{"nome": "Bruno Rocha"},
+               {"nome": "Arjen Lucassen"},
+               {"nome": "Anneke van Giersbergen"},
+               {"nome": "Steven Wilson"}]
+    response = make_response(json.dumps(pessoas))
+    response.content_type = "application/json"
+
+    return response
+
+    #return "<h1>Running Flask on Google Colab!</h1>"
+  
+app.run()
+```
 
 
 
@@ -3442,9 +3755,57 @@ Caso queira aprofundar o conhecimento em NoSQL, olhar outros produtos como Apach
 
 *Notas da live*
 
+<u>**Objetivos da Aula**</u>
+
+> 1. Introdução a Micro Serviços
+> 2. Mensageria
+> 3. Kafka
+> 4. Kafka as a Service
+> 5. Lab: Python + Kafka
+
+#### Parte 1: Introdução a micro serviços
+
+- Arquitetura Monolítica
+
+  *Tudo no mesmo servidor*
+
+![](.img/kafka1.png)
+
+- Arquitetura **Micro serviços**
+
+*Reparte o sistema em várias partes*
+
+![](.img/kafka2.png)
+
+- Micro serviços: Desvantagens
+  - Centralizar os log’s
+  - Comunicação gerando acoplamento entre módulos
+
+#### Parte 2: Mensageria
+
+*Notificação de módulos ou sistemas*
+
+<img src=".img/kafka4.png" style="zoom:40%;" />
+
+#### Parte 3: Kafka
+
+- Open Source
+- Processamento de Streams
+- Não precisa Reiventar a roda
+
+#### Parte 4: Kafka as a Service
+
+<img src=".img/kafka3.png" style="zoom:100%;" />
 
 
 
+#### Parte 5: Lab - Python + Kafka
+
+<u>Criando Cluster</u>
+
+https://www.cloudkarafka.com/docs/api.html
+
+Arquivo [Consumer.ipynb](aula26-01-2021/Consumer.ipynb)
 
 
 

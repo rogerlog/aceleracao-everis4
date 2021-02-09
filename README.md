@@ -3805,11 +3805,14 @@ app.run()
 
 https://www.cloudkarafka.com/docs/api.html
 
-Arquivo [Consumer.ipynb](aula26-01-2021/Consumer.ipynb)
+Arquivos
 
+- [Consumer.ipynb](aula26-01-2021/Consumer.ipynb)
+- [Producer.ipynb](aula26-01-2021/Producer.ipynb)
 
-
-
+```shell
+!pip install confluent_kafka
+```
 
 
 

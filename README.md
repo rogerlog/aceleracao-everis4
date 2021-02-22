@@ -12,9 +12,9 @@ Anotações das aulas. :pencil2::books:
 - [x] [Intensivo de Python - O mínimo que você precisa saber](#intensivo-de-python---o-mínimo-que-você-precisa-saber)
 - [x] [Trabalhando com serviços de mensageria real time com Python e Kafka na prática](#trabalhando-com-serviços-de-mensageria-real-time-com-python-e-kafka-na-prática)
 - [x] [Processando grandes conjuntos de dados de forma paralela e distribuída com Spark](#processando-grandes-conjuntos-de-dados-de-forma-paralela-e-distribuída-com-spark)
-- [ ] [Criando pipelines de dados eficientes - Parte 1](#criando-pipelines-de-dados-eficientes---parte-1)
+- [x] [Criando pipelines de dados eficientes - Parte 1](#criando-pipelines-de-dados-eficientes---parte-1)
 - [ ] [Criando pipelines de dados eficientes - Parte 2](#criando-pipelines-de-dados-eficientes---parte-2)
-- [ ] [Orquestrando Big Data em Ambiente de Nuvem](#orquestrando-bigdata-em-ambiente-de-nuvem)
+- [x] [Orquestrando Big Data em Ambiente de Nuvem](#orquestrando-bigdata-em-ambiente-de-nuvem)
 - [ ] [Scala: o poder de uma linguagem multiparadigma](#scala-o-poder-de-uma-linguagem-multiparadigma)
 - [x] [O que você precisa saber para construir APIs verdadeiramente restfull](#o-que-você-precisa-saber-para-construir-apis-verdadeiramente-restfull)
 - [x] [Graduação - habilidades que diferenciam um sênior na everis](#graduação---habilidades-que-diferenciam-um-sênior-na-everis)
@@ -4507,6 +4507,362 @@ Spark submit:
 
 *Notas da live*
 
+### SPARK STREAMING
+
+- databricks community
+- Python ou Scala
+- Máquina Virtual com Apache Spark 2.4
+
+#### Parte 1: Sobre o Spark
+
+- Apache Spark é um projeto de processamento de dados distribuído de código aberto que foi iniciado em 2009;
+- Spark é escrito em Scala, que é construído em cima da Java Virtual Machine (JVM) e Java runtime
+
+**Spark como uma abstração** : O Spark permite a criação de rotinas de processamento de dados complexos e de vários estágios.
+
+**Spark é rápido, eficiente e escalonável** : O Spark implementa uma estrutura distribuída e tolerante a falhas na memória chamada Resilient Distributed Dataset (RDD). Como o RDD funciona?
+
+**Aplicabilidade**
+
+- Operações de extração-transformação-carregamento (load) (ETL)
+- Análise preditiva e aprendizado de máquina
+- Mineração e processamento de texto
+- Processamento de eventos em tempo real
+- Reconhecimento de padrões
+
+**Linguagens de Programação**
+
+- **Scala**
+- **Python**
+- Java
+- SQL
+- R
+
+Exemplos RDD:
+
+**Python**
+`rddArquivo = sc.textFile ("hdfs://meucluster/data/arquivo.txt")`
+**Scala**
+`val rddArquivo = sc.textFile("hdfs:// meucluster/data/arquivo.txt")`
+**Java**
+`JavaRDD<String> rddArquivo = sc.textFile("hdfs://meucluster/data/arquivo.txt");`
+
+<br>
+
+**Uso Interativo**
+
+***PySpark***
+
+Scala
+
+**Uso não-interativo**
+
+spark-submit:
+
+``` shell
+[linux@user ~]$ spark-submit \
+--master yarn \
+--queue "SquadFI" \
+--name "[Programa Spark 123] ETL 999" \
+--driver-memory 2G \
+--executor-memory 2G \
+--executor-cores 1 \
+--proxy-user hive \
+--conf "spark.driver.maxResultSize=16g" \
+--conf "spark.dynamicAllocation.enabled=true" \
+--conf "spark.shuffle.service.enabled=true" \
+--conf "spark.shuffle.service.port=7337" \
+--conf "spark.dynamicAllocation.initialExecutors=10" \
+--conf "spark.dynamicAllocation.minExecutors=10" \
+--conf "spark.dynamicAllocation.maxExecutors=80" \
+--conf "spark.yarn.driver.memoryOverhead=2000" \
+--conf "spark.yarn.executor.memoryOverhead=2000" \
+--driver-java-options "-Djavax.security.auth.useSubjectCredsOnly=false" \
+--jars commons-csv-1.2.jar,spark-csv_2.11-1.5.0.jar \
+Main.py <parametro 1> <parametro 2> <parametro N>
+```
+
+
+
+
+
+**DRIVER**
+
+A vida útil do aplicativo Spark começa (e termina) com o driver Spark. O driver Spark é o processo que os clientes usam para enviar aplicativos no Spark. O driver também é responsável por planejar e coordenar a execução do programa Spark e retornar o status e/ou resultados (dados) ao cliente.
+
+O driver Spark é responsável por criar o SparkContext. O SparkContext, é referido como sc, é a instância do aplicativo que representa a conexão com o Master do Spark (e os Workers do Spark). O SparkContext é instanciado no início de um aplicativo Spark (incluindo os shells interativos) e é usado para todo o programa.
+
+- Uma das principais funções do driver é planejar o aplicativo.
+- O driver obtém a entrada de processamento do aplicativo e planeja a execução do programa.
+- O driver pega todas as transformações solicitadas (operações de manipulação de dados) e ações (solicitações de saída ou um prompt para executar o programa) e cria um Gráfico Acíclico Direcionado (Directed Acyclic Graph - DAG).
+
+**DAG**
+
+**CLUSTER MANAGER**
+
+O Cluster Manager é o processo responsável por monitorar os nós Workers e reservar recursos nesses nós mediante solicitação do Spark Master. O Spark Master, por sua vez, disponibiliza esses recursos de cluster para o Driver na forma de executores.
+O Cluster Manager pode ser separado do processo Master. Esse é o caso ao executar o Spark no Mesos ou YARN.
+No caso do Spark rodando no modo Standalone, o processo Master também executa as funções do Cluster Manager.
+Efetivamente, ele atua como seu próprio gerenciador de cluster.
+
+- O Cluster Manager em um aplicativo Spark distribuído é o processo que governa, monitora e reserva recursos na forma de contêineres em nós de worker de cluster (ou escravos). Esses contêineres são reservados mediante solicitação do Spark Master. O Cluster Manager no caso do Spark no YARN é o YARN ResourceManager.
+- Um Spark Driver em execução no modo YARN envia um aplicativo ao ResourceManager e, em seguida, o ResourceManager designa um ApplicationsMaster para o aplicativo Spark.
+
+
+
+resourcemanager:8088/cluster
+
+Running Applications
+
+Exemplo de um aplicativo Spark gerenciado pelo YARN mostrado no ResourceManager UI, normalmente disponível em http://<resource_manager>:8088
+
+![](.img/pipelines1.png)
+
+**SPARK MASTER**
+O Spark master é o processo que solicita recursos no cluster e os disponibiliza para o driver Spark. Em
+qualquer modo de implantação, o mestre negocia recursos ou contêineres com nós de trabalho ou nós
+escravos e rastreia seu status e monitora seu progresso.
+O processo mestre do Spark atende a uma interface de usuário da web na porta 8080 no host mestre:
+
+![](.img/pipelines2.png)
+
+- O processo ApplicationsMaster que é instanciado pelo ResourceManager no envio do aplicativo Spark atua como o Spark Master. O Driver informa o ApplicationsMaster sobre os requisitos de seu executor para o aplicativo. O ApplicationsMaster, por sua vez, solicita containers (que são hospedados em NodeManagers) do ResourceManager para hospedar esses executores.
+- O ApplicationsMaster é responsável por gerenciar esses containers (executors) durante o ciclo de vida do aplicativo Spark.
+- O Driver coordena o estado do aplicativo e as transições de estágio de processamento.
+- O próprio ApplicationsMaster é hospedado em uma JVM em um nó slave ou worker no cluster e é, na verdade, o primeiro recurso alocado para qualquer aplicativo Spark em execução no YARN.
+
+A UI do ApplicationsMaster para um aplicativo Spark é a UI do Spark Master. Isso está disponível como um link na UI do ResourceManager:
+
+![](https://ptgmedia.pearsoncmg.com/images/chap3_9780134846019/elementLinks/03fig03_alt.jpg)
+
+**Modo Cluster**
+
+![](.img/pipeline3.jpg)
+
+
+
+**Modo Cluster (Yarn-Cluster)**
+
+1. O Client (uma chamada de processo do usuário via spark-submit) envia um aplicativo Spark para o Cluster Manager (o YARN ResourceManager).
+2. O ResourceManager atribui um ApplicationsMaster (o Spark Master) para o aplicativo. O processo do Driver é criado no mesmo nó.
+3. O ApplicationsMaster solicita containers para os Executors do ResourceManager. Os contêineres são atribuídos e os executors são gerados. O Driver então se comunica com os executors para organizar o processamento de tarefas e estágios do programa Spark.
+4. O driver retorna o progresso, resultados e status para o cliente.
+
+##### Iniciando
+
+```shell
+[linux@user ~]$ pyspark --master local
+```
+
+![](.img/pipelines4.png)
+
+**Modo não interativo (aplicativo em Spark-submit)**
+
+from pyspark import SparkContext
+sc = SparkContext ("local [*]")
+#o código do seu aplicativo ...
+
+#### Cloud
+
+**AWS**
+
+- **EMR - Managed Hadoop Framehork**
+- AWS Glue DataBrew - Visual data preparation tool to clean and normalize data for analytics and machine learning.
+
+https://aws.amazon.com
+
+*AWS-EMR (Elastic MapReduce)*
+
+*AWS-GLUE*
+
+<br>
+
+Databricks Community - https://community.cloud.databricks.com/
+
+*Criar conta*
+
+Create Notebook
+
+
+
+### Parte 2: Streaming
+
+Por que? *(RDD é a camada mais baixa do Spark)*
+
+- Processamento de eventos em tempo real em sistemas de big data
+
+- De sensores e processamento de dados de rede à detecção de fraudes e monitoramento de sites e muito mais
+
+- Capacidade de consumir, processar e obter insights de fontes de dados de streaming
+
+  
+
+  Os objetivos para Spark Streaming incluíam:
+
+  - Latência baixa (segunda escala)
+  - Processamento de evento único (e apenas uma vez)
+  - Escalabilidade linear
+  - Integração com Spark Core API
+
+
+
+- Necessidade do processamento de eventos/fluxos como um componente-chave
+- Processamento de eventos integrado com sua estrutura de lote baseada em RDD
+- A abordagem Spark Streaming
+- Spark Streaming apresenta o conceito de "discretized streams" (ou DStreams)
+- DStreams são essencialmente lotes de dados armazenados em vários RDDs, cada lote representando uma janela de tempo (normalmente em segundos)
+- Os RDDs resultantes podem ser processados usando a API Spark RDD principal e todas as  transformações disponíveis
+
+**Arquitetura Macro**
+
+![](.img/pipelines5.png)
+
+#### Revisão
+
+Assim como acontece com os pontos de entrada do programa SparkContext, SQLContext e HiveContext que discuti antes, os aplicativos Spark Streaming também têm um ponto de entrada chamado  StreamingContext
+
+- Aplicação Spark = Driver + grupo de Executors
+- Driver executa o processo principal e cria um SparkContext que serve para coordenar a execução do seu job.
+- Os executors são processos em execução nos work nodes responsável por executar tasks que o Driver atribuiu a ele.
+- O cluster manager (Yarn, Mesos) é responsável pela alocação de recursos para seu aplicativo Spark.
+
+O SparkContext é usado pelo processo do Spark Driver do seu aplicativo Spark para estabelecer uma comunicação com o cluster e o cluster manager (Yarn) para então coordenar e executar jobs.
+
+SparkContext também permite o acesso a outros dois contextos, ou seja, SQLContext e HiveContext.
+
+Para criar um SparkContext, primeiro você precisa criar uma configuração, chamada de SparkConf.
+
+
+
+- SQLContext é o ponto de entrada para SparkSQL, que é um módulo Spark para processamento de dados estruturados.
+- Depois que o SQLContext é inicializado, o usuário pode usá-lo para realizar várias operações "semelhantes a sql" em conjuntos de dados e dataframes.
+- Para criar um SQLContext, primeiro você precisa instanciar um SparkContext.
+- Se o seu aplicativo Spark precisa se comunicar com o Hive e você está usando o Spark <2.0, provavelmente precisará de um HiveContext
+
+
+
+**Execução com HiveContext**
+
+```shell
+# PySpark
+from pyspark import SparkContext, HiveContext
+
+conf = SparkConf().setAppName ('app').setMaster (master)
+sc = SparkContext (conf)
+hive_context = HiveContext (sc)
+hive_context.sql ("select * from tableName limit 0")
+```
+
+**Scala – Acessando o Context**
+
+```scala
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.hive.HiveContext
+val sparkConf = new SparkConf().setAppName("app").setMaster("yarn")
+val sc = new SparkContext(sparkConf)
+val hiveContext = new HiveContext(sc)
+hiveContext.sql("select * from tableName limit 0")
+```
+
+O Spark 2.0 introduziu o SparkSession que substituiu essencialmente SQLContext e HiveContext e concede acesso imediato ao SparkContext.
+
+Criar um Spark Session com suporte a Hive:
+
+```shell
+# PySpark
+from pyspark.sql import SparkSession
+spark_session = SparkSession.builder.enableHiveSupport().getOrCreate()
+# Duas maneiras de acessar o contexto do spark a partir da sessão do spark
+spark_context = spark_session._sc
+spark_context = spark_session.sparkContext
+```
+
+Criar um cluster no databricks, e um notebook.
+
+![](.img/pipelines6.png)
+
+
+
+#### StreamContext
+
+- O StreamingContext representa uma conexão a uma plataforma ou cluster Spark usando um SparkContext existente
+- O StreamingContext é usado para criar os datasources de DStreams controlar a computação de streaming e as transformações de DStream.
+- O StreamingContext também especifica o argumento batchDuration, que é um intervalo de tempo em
+  segundos pelo qual os dados de streaming serão divididos em lotes.
+- Depois de instanciar um StreamingContext, você criaria uma conexão com um fluxo de dados e definiria uma série de transformações a serem realizadas.
+- O método start() ou ssc.start() é usado para acionar a os dados de entrada depois que um
+  StreamingContext é estabelecido.
+- O StreamingContext pode ser interrompido programaticamente usando ssc.stop()ou ssc.awaitTermination().
+- Discretized streams (DStreams) são o objeto de programação básico na API Spark Streaming
+- Streams representam uma sequência contínua de RDDs que são criados a partir de um fluxo contínuo de dados
+- DStreams podem ser criados a partir de fontes de dados de streaming, como soquetes TCP, sistemas de mensagens, APIs de streaming (como a API de streaming do Twitter) e muito mais.
+- DStreams (como uma abstracção RDD) também pode ser produzido a partir de transformações realizadas na DStreams existentes (tais como map, flatMap e outras operações).
+- DStreams oferece suporte a dois tipos de operações:
+  1. Imagem Transformações
+  2. Imagem Operações de saída
+
+
+
+DStreams são Lazy Evaluation assim como Spark RDD
+Representação de um discretized stream, com cada intervalo t representando uma janela de tempo
+especificada pelo batchDurationargumento na instanciação de StreamingContext:
+
+![](.img/pipelines7.png)
+
+
+
+- DStreams Source são definidos em um StreamingContext para um fluxo de dados de entrada especificado, da mesma forma que os RDDs são criados para uma fonte de dados de entrada em um SparkContext
+- Muitas fontes de entrada de streaming comuns estão incluídas na API de streaming, como fontes para ler dados de um soquete TCP ou para ler dados enquanto eles estão sendo gravados no HDFS
+- As fontes básicas de dados de entrada para a criação de DStreams são descritas aqui:
+  socketTextStream()
+- StreamingContext.socketTextStream (hostname, port, storageLevel = StorageLevel (True, True, False, False, 2))
+- O método socketTextStream é usado para criar um DStream a partir de uma fonte TCP de entrada definida pelos argumentos hostnamee e port. 
+- Os dados recebidos são interpretados usando a enconding UTF8, com terminação de nova linha usada
+  para definir novos registros.
+- O storageLevelargumento que define o storage level padrão MEMORY_AND_DISK_SER_2
+
+```SPARQL
+from pyspark.streaming import StreamingContext
+ssc = StreamingContext(sc, 1)
+lines = ssc.socketTextStream('localhost', 9999)
+counts = lines.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1)).reduceByKey(lambda a, b: a+b)
+counts.pprint()
+ssc.start()
+ssc.awaitTermination()
+```
+
+<br>
+
+### Parte 3 - Casos de Uso
+
+- Microservice / API
+  - Spark Streaming
+  - Apache HBase
+  - Apache Phoenix
+  - MicroStrategy (Data Vis)
+
+
+
+- Compatibilidade
+  - Kafka - Flume - HDFS/S3 - Kinesis - Twitter
+  - Spark Streaming
+  - HDFS - Databases - Dashboard
+
+![](.img/pipelines8.png)
+
+
+
+![](.img/pipelines9.png)
+
+
+
+### Referências
+
+- https://academy.databricks.com/
+- https://www.cloudera.com/
+- https://www.cloudera.com/about/training/certification/cca-spark.html
+- https://www.amazon.com.br/Apache-Spark-Hours-Teach-Yourself/dp/0672338513
+
 
 
 <br>
@@ -4552,6 +4908,162 @@ Spark submit:
 <a href="/.pdfs/Live-01-02-2021-BigDataNuvem.pdf" target="_blank">Slides</a>
 
 *Notas da live*
+
+### Computação em Nuvem
+
+> A computação em nuvem é a entrega de recursos de TI sob demanda por meio da internet com definição de preço de pagamento conforme o uso. Em vez de comprar, ter e manter datacenters e servidores físicos, você pode acessar serviços de tecnologia, como capacidade computacional, armazenamento e banco de dados, conforme a necessidade, usando um provedor de nuvem como a Amazon Web Services (AWS).
+
+
+
+- Traditional IT
+- Infrastructure *(as a Service)*
+- Platform *(as a Service)*
+- Software *(as a Service)*
+
+
+
+#### Infraestrutura como serviço (IaaS)
+
+A infraestrutura como um serviço, às vezes abreviada como IaaS, contém os componentes básicos da TI em nuvem e, geralmente, dá acesso (virtual ou no hardware dedicado) a recursos de rede e computadores, como também espaço para o armazenamento de dados.
+
+https://aws.amazon.com/pt/types-of-cloud-computing/
+
+#### Plataforma como serviço (PaaS)
+
+Plataformas como um serviço, não há necessidade de gerenciar a infraestrutura subjacente (geralmente, hardware e sistemas operacionais), permitindo que você se concentre na implantação e no gerenciamento das suas aplicações. Isso o ajuda a tornar-se mais eficiente, pois elimina as suas preocupações com aquisição de recursos, planejamento de capacidade, manutenção de software, patching ou qualquer outro tipo de trabalho pesado semelhando envolvido na execução da sua aplicação.
+
+#### Software como um serviço (Saas)
+
+O software como um serviço oferece um produto completo, executado e gerenciado pelo provedor de serviços. Na maioria dos casos, as pessoas que se referem ao software como um serviço estão se referindo às aplicações de usuário final.
+
+Um exemplo comum de aplicação do SaaS é o webmail, no qual você pode enviar e receber e-mails sem precisar gerenciar recursos adicionais para o produto de e-mail ou manter os servidores e sistemas operacionais no qual o programa de e-mail está sendo executado.
+
+#### Visão atual do Mercado
+
+![](.img/nuvem1.png)
+
+
+
+#### Implementação
+
+- Nuvem Privada
+- Nuvem Pública
+- Nuvem Híbrida
+
+![](.img/nuvem2.png)
+
+
+
+#### Serviços AWS
+
+![](.img/nuvem3.png)
+
+#### Amazon Computer Services
+
+- Amazon EC2 - Computação em nuvem para desenvolvedores.
+
+- Amazon Lambda - Serviço de computação sem servidor que executa código.
+
+- Amazon ECS - Orquestração de conteineres.
+
+- Amazon EKS - Serviço Kubernetes totalmente gerenciado.
+
+- Amazon Fargate - Mecanismo de computação sem servidor para conteineres.
+
+#### Amazon Network Services
+
+- Permite executar recursos da **AWS** em uma rede.
+- Amazon CloudFront - Entrega de conteúdo **CDN** (Content Delivery Network)
+- Amazon API Gateway - Monitorar e publicar APIs em qualquer escala.
+- Amazon Route53 - DNS na nuvem altamente disponível e escalável.
+- AWS VPN - 
+- AWS Direct Connect - facilita estabelecer convexao de rede dedicada.
+
+#### Amazon Storage Services
+
+- Amazon S3 - serviço escalonável, de alta velocidade e baixo custo baseado na web, projetado para backup online e arquivamento de dados e programas de aplicativos.
+- Amazon Ebs - serviço de armazenamento em bloco fácil de usar e de alta performance.
+- Amazon EFS - Sistema de arquivos NFS elástico
+
+#### Amazon Security Services
+
+- AWS IAM - Identity and Access Management, gerenciar segurança aos serviços e recursos da AWS.
+- AWS ACM - Autoridade de certificados (AC)
+- AWS key management Service (KMS) - operações assinatura digital
+- AWS WAF - firewall de aplicativos web
+- Amazon Inspector - Segurança e conformidade de aplicativos
+- AWS CloudHSM - Hardware Security Module (HSM - Modulo de segurança de hardware)
+- AWS Directory Service
+
+#### Amazon Management Services
+
+- Amazon CloudWatch - métricas e eventos. Visualização em paineis automatizados.
+- AWS CloudTrail - Governança, Conformidade, auditoria operacional.
+- System Manager - Gerenciamento de recursos e aplicações, gerenciamento de infraestruturas em grande escala com segurança
+- AWS Trusted Advisor - ferramenta online que fornece orientações em tempo real para ajudar a provisionar recursos de acordo com as melhores práticas da AWS.
+
+#### Amazon DevOps Services
+
+- AWS CodeCommit - repositórios protegidos baseados em Git
+- AWS CodePipelline - automatizar pipelines de liberação para oferecer atualizações rápidas e confiáveis de aplicativos e infraestruturas.
+- AWS CodeBuild
+- AWS CodeDeploy
+- AWS CloudFormation
+- AWS Config - Auditar e Avaliar 
+- AWS OpsWorks - Chef e do Puppet
+- AWS Service Catalog
+
+#### Amazon Application Services
+
+- AWS Storage Gateway
+- AWS CloudSearch - solução de pesquisa para o seu site
+- SES - Simple Email Service
+- SQS - Amazon Simple Queue Service, serviço de filas de mensagens
+- Amazon SWF 
+
+#### Amazon Mobile Services
+
+- Amazon Cognito
+- Mobile Analytics
+- Amazon SNS - Simple Notification Service
+- Device Farm - serviço de teste de aplicativos
+- Mobile Hub - templates para app móveis
+
+#### Amazon Database Services
+
+- Amazon RDS - Relational Database Service
+- DynamoDB - serviço de banco de dados NoSQL
+- Redshift - data warehouse
+- Amazon Elasticache - gerenciamento e dimensionamento de armazenamento de dados na memória
+
+#### Amazon Analytics Services
+
+- Amazon Athena - consultas interativas para analise de dados no Amazon S3 usando SQL padrão.
+- Amazon Kinesis Data Streams - serviço escalável e duraveç de streaming de dados em tempo real capaz de capturar continuamente gigabytes
+- AWS Glue - 
+- EMR - Amazon Elastic MapReduce - processamento de dados como Apache Hadoop, Apache Spark e Presto de maneira fácil, econômica e segura.
+- Amazon QuickSight - serviço de inteligencia comercial
+- ElasticSearch - serviço totalmente gerenciado que facilita a implantação, a segurança.
+
+#### Amazon Machine Learning
+
+- Amazon SageMaker 
+- Amazon Polly - serviço que transforma texto em falas realistas
+- Amazon Comprehend - Natural Language Processing
+- Lex
+- Rekognition
+- AWS DeepLens 
+- Amazon Transcribe
+
+### Parte 2 - Case de Uso
+
+Detecção de anomalias do fluxo de cliques em tempo real do Amazon kinesis.
+
+
+
+
+
+
 
 
 

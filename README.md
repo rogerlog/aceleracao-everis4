@@ -5061,14 +5061,6 @@ Detecção de anomalias do fluxo de cliques em tempo real do Amazon kinesis.
 
 
 
-
-
-
-
-
-
-
-
 <br>
 
 <br>
@@ -5090,6 +5082,175 @@ Detecção de anomalias do fluxo de cliques em tempo real do Amazon kinesis.
 *Notas da live*
 
 https://mvnrepository.com
+
+#### Objetivos
+
+- Conhecendo Scala
+- Sintaxe 
+- Orientação a Objetos
+- RDD (Spark)
+
+#### Parte 1 - Conhecendo e compilando em Scala
+
+Scala combina programação orientada a objetos e programação funcional em uma linguagem concisa de alto nível. Roda sobre a JVN (Java Virtual Machine).
+
+##### Instalando
+
+open JDK
+
+- Para instalar o maven
+
+  - sudo yum install java-1.8.0-openjdk
+
+- Para instalar o Scala
+
+  - wget https://downloads.lightbend.com/scala/2.11.12/scala-2.11.12.rpm
+  - sudo rpm -i scala-2.11.12.rpm
+
+- Apache Maven
+
+  - Apache Maven, é uma ferramenta de automação de compilação utilizada primariamente em projetos Java. Também é utilizada para construir e gerenciar projetos escritos em C#, Ruby, Scala e outras linguagens.
+  - Utiliza o XML (POM) para descrever o projeto de software sendo construído, suas dependências sobre módulos e componentes externos, a ordem de compilação, diretórios e plugins necessários.
+  - sudo yum install maven
+
+  
+
+##### Archetypes
+
+- Group: net.alchim31.maven
+- ArtifactID: scala-archetype-simple
+- Version: 1.6
+
+Utilizar o comando:
+
+```shell
+mvn archetype:generate -DarchetypeGroupId=net.alchim31.maven -DarchetypeArtifactId=scala-archetype-simple -DarchetypeVersion=1.6
+```
+
+Para utilizar no IntelliJ
+
+https://docs.scala-lang.org/getting-started/intellij-track/getting-started-with-scala-in-intellij.html
+
+Foi utilizado o VsCode
+
+Instalar a extensão Metals (Scala)
+
+**Maven Repository**
+
+https://mvnrepository.com/search?q=apache+spark
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-core_2.11</artifactId>
+    <version>2.2.1</version>
+</dependency>
+```
+
+##### Executando meu código
+
+Para gerar o projeto, entre no diretório contendo o arquivo pom.xml do projeto e utilize o comando:
+
+```shell
+mvn package
+```
+
+Com as configurações do professor não consegui executar meu código. Fiz algumas modificações nas versões do scala e spark utilizados no arquivo `pom.xml`
+
+```xml
+<properties>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
+    <encoding>UTF-8</encoding>
+    <scala.version>2.12.13</scala.version>
+    <scala.compat.version>2.11</scala.compat.version>
+    <spark.version>2.2.1</spark.version>
+  </properties>
+```
+
+```xml
+	<plugin>
+        <!-- see http://davidb.github.com/scala-maven-plugin -->
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>4.4.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <args>
+                <arg>-dependencyfile</arg>
+                <arg>${project.build.directory}/.scala_dependencies</arg>
+              </args>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+```
+
+
+
+Para executar o programa:
+
+- scala -classpath target/{nome do jar}.jar {meu pacote}.{meu objeto}
+
+```shell
+ls -lh target/
+```
+
+```shell
+$ scala -classpath target/meuProgramaScalaBonito-1.0.jar br.com.dio.meuProgramaScalaBonito.App chave valor
+
+
+> Hello World!
+```
+
+##### Utilizando o java
+
+```shell
+$ java -classpath target/meuProgramaScalaBonito-1.0-shaded.jar br.com.dio.meuProgramaScalaBonito.App chave valor
+
+Hello World!
+```
+
+##### Executando scala no terminal
+
+Digitar no terminal `scala` e vai abrir o ambiente do scala. *Parecido com Python, Ruby, e outras linguagens*
+
+```shell
+scala> print("Hello")
+
+
+Hello
+```
+
+<br>
+
+#### Parte 2 - A sintaxe do Scala
+
+
+
+46:21
+
+<br>
+
+#### Parte 3 - Orientação a objetos
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

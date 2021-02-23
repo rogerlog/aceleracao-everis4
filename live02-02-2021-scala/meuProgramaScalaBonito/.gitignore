@@ -33,6 +33,8 @@ build.log
 .CVS
 .hg*
 
+.bloop
+
 # switch to regexp syntax.
 #  syntax: regexp
 #  ^\.pc/

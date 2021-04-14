@@ -15,7 +15,7 @@ Anotações das aulas. :pencil2::books:
 - [x] [Criando pipelines de dados eficientes - Parte 1](#criando-pipelines-de-dados-eficientes---parte-1)
 - [ ] [Criando pipelines de dados eficientes - Parte 2](#criando-pipelines-de-dados-eficientes---parte-2)
 - [x] [Orquestrando Big Data em Ambiente de Nuvem](#orquestrando-bigdata-em-ambiente-de-nuvem)
-- [ ] [Scala: o poder de uma linguagem multiparadigma](#scala-o-poder-de-uma-linguagem-multiparadigma)
+- [x] [Scala: o poder de uma linguagem multiparadigma](#scala-o-poder-de-uma-linguagem-multiparadigma)
 - [x] [O que você precisa saber para construir APIs verdadeiramente restfull](#o-que-você-precisa-saber-para-construir-apis-verdadeiramente-restfull)
 - [x] [Graduação - habilidades que diferenciam um sênior na everis](#graduação---habilidades-que-diferenciam-um-sênior-na-everis)
 
@@ -5232,23 +5232,164 @@ Hello
 
 #### Parte 2 - A sintaxe do Scala
 
+##### Object
+
+O objeto principal a ser chamado pelo scala precisa ter o método `def main(args : Array[String])`
+
+```scala
+package com.everis
+
+object App {
+    def main(args : Array[String]){
+        println("Hello World")
+    }
+}
+```
+
+Comentários // e /* */
+
+```scala
+println("Hello, James")
+
+println(s"1 + 1 = ${1 + 1}")
+
+val name = "James"
+println(s"Hello, $name")
+```
 
 
-46:21
+
+##### Variáveis var e val
+
+var podem ser alteradas
+
+val não pode redefinir
+
+
+
+##### Tipos de variáveis
+
+val x: String = "Ola"
+
+##### Operadores
+
+% Resto da divisão inteira
+
+!= Diferente
+
+! NOT
+
+|| OR
+
+&& AND
+
+##### Condicionais
+
+if else
+
+```scala
+if (condicional == 1) {
+
+} else {
+
+}
+```
+
+case 1 => println("Domingo")
+
+##### Iteráveis
+
+Arrays = são objetos estáticos em Scala
+
+`val meuArray:Array[String] = Array[String]()`
+
+//importando
+
+`import scala.collection.mutable.ArrayBuffer`
+
+<u>Listas</u>
+
+<u>Objeto Iteravel</u>
+
+while
+
+<u>Funções lambdas</u>
+
+foreach
+
+map
+
+<u>Filtragem</u>
+
+filter
+
+filterNot
+
+<u>Reduções</u> : Retorna um elemento
+
+reduce
+
+<u>Group By</u>
+
+<u>Sort By</u>
+
+<u>Funções</u>
+
+```scala
+//não retona valores
+def minhaFuncao(inteiro:Int) :Unit {
+
+}
+
+//retorna valores
+def minhaFuncao(inteiro:Int):Int = {
+    inteiro * 2
+}
+
+//funções em variáveis
+val minhaFuncaoEmVariavel:Int => Unit = (valor:Int) => {println(s"Valor daminha função em variável: ${valor * 4}")}
+minhaFuncaoEmVariavel(34)
+
+//funções em variáveis retornando valores
+val minhaFuncaoRetornandoMultPi:Int => Double = (valor:Int) => {valor * 3.14}
+println(s"Resultado da minha função implicita):${minhaFuncaoRetornandoMultPi(34)}")
+
+```
+
+
 
 <br>
 
 #### Parte 3 - Orientação a objetos
 
+Classe
+
+```scala
+class MinhaNovaClasse {
+    
+}
+
+#Instanciando...
+val minhaClasse: MinhaNovaClasse = new MinhaNovaClasse("Teste");
+```
 
 
 
+Pode ter mulplos construtores
 
+Métodos de classe são declarados da mesma forma que funções
 
+Variaveis e metodos poder ser publicos, privados, protegidos.
 
+private, protected, def
 
+Herança em Scala poder ser representada com extends
 
+https://docs.scala-lang.org/?_ga=2.219152154.265858086.1612118441-215605817.1612018441
 
+https://alvinalexander.com/scala
+
+https://www.amazon.com.br/Learning-Scala-Practical-Functional-Programming-ebook/
 
 
 
